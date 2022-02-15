@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}
+{% if request.user.is_authenticated %}
+<h3>Logged in as {{ request.user }} ({{ request.user.email }})</h3>
+
+<p>
+{% for app_link in openmaps_auth.app_links %}
+<a href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">{{ app_link.text }}</a>
+{% endfor %}
+<p>
+<a href="{% url 'openmaps_logout' %}"><button>Logout</button></a>
+</p>
+{% else %}
+<h3>Please log in to continue</h3>
+<p>
+<a href="{% url 'openmaps_login' %}"><button>Login</button></a>
+</p>
+{% endif %}
+{% endblock body %}

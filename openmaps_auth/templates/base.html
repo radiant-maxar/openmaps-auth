@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{% if request.user.is_authenticated %}{{ openmaps_auth.title }}{% else %}Log in to {{ openmaps_auth.title }}{% endif %}</title>
+<meta charset="UTF-8">
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #3B3B3D;
+        color: #CBCFCB;
+      }
+      a {
+        color: #6CAC4D;
+      }
+      a:hover {
+        color: #429F14;
+      }
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to {{ openmaps_auth.title }}!</h1>
+{% block body %}
+{% endblock body %}
+</body>
+</html>

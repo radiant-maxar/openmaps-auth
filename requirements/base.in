@@ -1,0 +1,7 @@
+beautifulsoup4==4.10.0
+Django==4.0.2
+django-environ==0.8.1
+pymemcache==3.5.0
+python-jose[cryptography]==3.3.0
+social-auth-app-django==5.0.0
+tzdata==2021.5

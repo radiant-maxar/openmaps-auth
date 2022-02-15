@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+<h3>Please log in to continue</h3>
+<form name="login" method="post" action="{% url 'openmaps_login' %}">
+  <table>
+    {{ form }}
+    <tr>
+      {% csrf_token %}
+    </tr>
+    <tr>
+      <td><input type="reset"></td>
+      <td><input type="submit" value="Login"></td>
+    </tr>
+  </table>
+</form>
+{% endblock body %}
