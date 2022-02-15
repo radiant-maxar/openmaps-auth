@@ -5,7 +5,7 @@ import openmaps_auth
 with open('README.md', 'rt') as fh:
     long_description = fh.read()
 
-with open('requirements/base.txt', 'rt') as fh:
+with open('requirements/base.in', 'rt') as fh:
     install_requires = fh.read().split()
     
 setup(name='openmaps_auth',
