@@ -1,5 +1,6 @@
 from pathlib import Path
 import environ
+import json
 
 env = environ.Env()
 
@@ -7,12 +8,17 @@ BASE_DIR = Path(__file__).parent.parent.parent
 BASE_PATH = env.str("OPENMAPS_AUTH_BASE_PATH", default="")
 
 OPENMAPS_AUTH_BACKEND = env.str("OPENMAPS_AUTH_BACKEND", default=None)
-OPENMAPS_AUTH_REDIRECT_URI = env.str("OPENMAPS_AUTH_REDIRECT_URI")
-OPENMAPS_AUTH_SUCCESS_URI = env.str("OPENMAPS_AUTH_SUCCESS_URI")
+if OPENMAPS_AUTH_BACKEND:
+    OPENMAPS_AUTH_REDIRECT_URI = env.str("OPENMAPS_AUTH_REDIRECT_URI")
 OPENMAPS_AUTH_TITLE = env.str("OPENMAPS_AUTH_TITLE", default="Maxar OpenMaps")
-OPENMAPS_AUTH_APP_LINKS = env.json(
-    "OPENMAPS_AUTH_APP_LINKS", default=[{"link": "/", "text": "MapEdit"}]
-)
+OPENMAPS_AUTH_APP_LINKS_FILE = env.str("OPENMAPS_AUTH_APP_LINKS_FILE", default=None)
+if OPENMAPS_AUTH_APP_LINKS_FILE:
+    with open(OPENMAPS_AUTH_APP_LINKS_FILE, "rt") as fh:
+        OPENMAPS_AUTH_APP_LINKS = json.load(fh)
+else:
+    OPENMAPS_AUTH_APP_LINKS = env.json(
+        "OPENMAPS_AUTH_APP_LINKS", default=[{"link": "/", "text": "MapEdit"}]
+    )
 
 OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
 OSM_API_URL = env.str("OSM_API_URL", default=OSM_BASE_URL)
@@ -94,6 +100,7 @@ else:
     DEFAULT_SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 # Sessions
+SESSION_COOKIE_AGE = env.int("SESSION_COOKIE_AGE", default=1209600)
 SESSION_COOKIE_DOMAIN = env.str("SESSION_COOKIE_DOMAIN", default=None)
 SESSION_ENGINE = env.str("SESSION_ENGINE", default=DEFAULT_SESSION_ENGINE)
 
@@ -131,7 +138,7 @@ elif OPENMAPS_AUTH_BACKEND == "openstreetmap":
 # Ensure proper redirects when using Email or Social login.
 LOGIN_REDIRECT_URL = "callback"
 LOGOUT_REDIRECT_URL = "index"
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = OPENMAPS_AUTH_SUCCESS_URI
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "index"
 
 # Restrict access.
 SOCIAL_AUTH_WHITELISTED_DOMAINS = env.list(
@@ -144,8 +151,6 @@ SOCIAL_AUTH_WHITELISTED_EMAILS_FILE = env.str(
     "OPENMAPS_AUTH_WHITELISTED_EMAILS_FILE", default=None
 )
 if SOCIAL_AUTH_WHITELISTED_EMAILS_FILE:
-    import json
-
     with open(SOCIAL_AUTH_WHITELISTED_EMAILS_FILE, "rb") as fh:
         SOCIAL_AUTH_WHITELISTED_EMAILS.extend(json.load(fh))
 
