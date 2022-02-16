@@ -19,6 +19,15 @@ def valid(request):
         return JsonResponse({})
 
 
+def set_osm_cookie(response):
+    response.set_cookie(
+        settings.OSM_SESSION_KEY,
+        request.session[settings.OSM_SESSION_KEY],
+        domain=settings.SESSION_COOKIE_DOMAIN,
+    )
+    return response
+
+
 if settings.OPENMAPS_AUTH_BACKEND:
     import social_django.views
 
@@ -29,22 +38,16 @@ if settings.OPENMAPS_AUTH_BACKEND:
             *args,
             **kwargs,
         )
-        resp.set_cookie(
-            settings.OSM_SESSION_KEY, request.session[settings.OSM_SESSION_KEY]
-        )
-        return resp
+        return set_osm_cookie(resp)
 
     def login(request):
         return social_django.views.auth(request, settings.OPENMAPS_AUTH_BACKEND)
+
+
 else:
 
     def callback(request):
         resp = HttpResponseRedirect(reverse("index"))
-        resp.set_cookie(
-            settings.OSM_SESSION_KEY,
-            request.session[settings.OSM_SESSION_KEY],
-            domain=settings.SESSION_COOKIE_DOMAIN,
-        )
-        return resp
+        return set_osm_cookie(resp)
 
     login = LoginView.as_view(template_name="login.html")
