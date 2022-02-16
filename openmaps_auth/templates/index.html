@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block body %}
 {% if request.user.is_authenticated %}
-<h3>Logged in as {{ request.user }} ({{ request.user.email }})</h3>
+<h3>Logged in as {{ request.user.email }}</h3>
 
 <p>
 {% for app_link in openmaps_auth.app_links %}
