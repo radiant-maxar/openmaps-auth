@@ -36,8 +36,6 @@ if settings.OPENMAPS_AUTH_BACKEND:
 
     def login(request):
         return social_django.views.auth(request, settings.OPENMAPS_AUTH_BACKEND)
-
-
 else:
 
     def callback(request):
