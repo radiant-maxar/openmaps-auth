@@ -9,6 +9,7 @@ BASE_PATH = env.str("OPENMAPS_AUTH_BASE_PATH", default="")
 OPENMAPS_AUTH_BACKEND = env.str("OPENMAPS_AUTH_BACKEND", default=None)
 if OPENMAPS_AUTH_BACKEND:
     OPENMAPS_AUTH_REDIRECT_URI = env.str("OPENMAPS_AUTH_REDIRECT_URI")
+    OPENMAPS_AUTH_SECRET = env.str("OPENMAPS_AUTH_SECRET", default="")
 OPENMAPS_AUTH_TITLE = env.str("OPENMAPS_AUTH_TITLE", default="Maxar OpenMaps")
 OPENMAPS_AUTH_APP_LINKS = env.json(
     "OPENMAPS_AUTH_APP_LINKS", default=[{"link": "/", "text": "MapEdit"}]
@@ -100,7 +101,6 @@ SESSION_ENGINE = env.str("SESSION_ENGINE", default=DEFAULT_SESSION_ENGINE)
 # Authentication
 OPENMAPS_AUTH_KEY = env.str("OPENMAPS_AUTH_KEY", default="")
 OPENMAPS_AUTH_OIDC_ENDPOINT = env.str("OPENMAPS_AUTH_OIDC_ENDPOINT", default=None)
-OPENMAPS_AUTH_SECRET = env.str("OPENMAPS_AUTH_SECRET", default="")
 
 # Always have fallback email login backend.
 AUTHENTICATION_BACKENDS = ("openmaps_auth.backends.EmailBackend",)
