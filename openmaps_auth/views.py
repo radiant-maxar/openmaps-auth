@@ -9,7 +9,11 @@ def index(request):
     return render(request, "index.html", {})
 
 
-logout = LogoutView.as_view(template_name="index.html")
+def logout(request):
+    resp = LogoutView.as_view(template_name="index.html")(request)
+    for cookie in request.COOKIES:
+        resp.delete_cookie(cookie)
+    return resp
 
 
 def valid(request):
