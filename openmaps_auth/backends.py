@@ -101,9 +101,9 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
 
 
 class OpenStreetMapOAuth(BaseOpenStreetMapOAuth):
-    AUTHORIZATION_URL = "{}/authorize".format(settings.OSM_OAUTH_URL)
-    REQUEST_TOKEN_URL = "{}/request_token".format(settings.OSM_OAUTH_URL)
-    ACCESS_TOKEN_URL = "{}/access_token".format(settings.OSM_OAUTH_URL)
+    AUTHORIZATION_URL = "{}/oauth/authorize".format(settings.OSM_AUTH_URL)
+    REQUEST_TOKEN_URL = "{}/oauth/request_token".format(settings.OSM_AUTH_URL)
+    ACCESS_TOKEN_URL = "{}/oauth/access_token".format(settings.OSM_AUTH_URL)
 
     def get_redirect_uri(self, state=None):
         return self.setting("REDIRECT_URI", super().get_redirect_uri(state))
@@ -111,7 +111,7 @@ class OpenStreetMapOAuth(BaseOpenStreetMapOAuth):
     def user_data(self, access_token, *args, **kwargs):
         """Return user data provided by OSM"""
         response = self.oauth_request(
-            access_token, "{}/api/0.6/user/details".format(settings.OSM_API_URL)
+            access_token, "{}/api/0.6/user/details".format(settings.OSM_AUTH_URL)
         )
         try:
             dom = minidom.parseString(response.content)

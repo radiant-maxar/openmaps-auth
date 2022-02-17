@@ -21,8 +21,7 @@ else:
     )
 
 OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
-OSM_API_URL = env.str("OSM_API_URL", default=OSM_BASE_URL)
-OSM_OAUTH_URL = env.str("OSM_OAUTH_URL", default=OSM_BASE_URL + "/oauth")
+OSM_AUTH_URL = env.str("OSM_AUTH_URL", default=OSM_BASE_URL)
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
 OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
 
