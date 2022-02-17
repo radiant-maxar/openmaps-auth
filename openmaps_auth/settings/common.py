@@ -23,7 +23,12 @@ else:
 OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
 OSM_AUTH_URL = env.str("OSM_AUTH_URL", default=OSM_BASE_URL)
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
-OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
+OSM_USER_PASSWORD_FILE = env.str("OSM_USER_PASSWORD_FILE", default=None)
+if OSM_USER_PASSWORD_FILE:
+    with open(OSM_USER_PASSWORD_FILE, "rt") as fh:
+        OSM_USER_PASSWORD = fh.read()
+else:
+    OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 DEBUG = env.bool("DEBUG", default=False)
