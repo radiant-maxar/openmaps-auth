@@ -1,8 +1,7 @@
 from pathlib import Path
 import environ
-import json
 
-env = environ.Env()
+env = environ.FileAwareEnv()
 
 BASE_DIR = Path(__file__).parent.parent.parent
 BASE_PATH = env.str("OPENMAPS_AUTH_BASE_PATH", default="")
@@ -11,24 +10,14 @@ OPENMAPS_AUTH_BACKEND = env.str("OPENMAPS_AUTH_BACKEND", default=None)
 if OPENMAPS_AUTH_BACKEND:
     OPENMAPS_AUTH_REDIRECT_URI = env.str("OPENMAPS_AUTH_REDIRECT_URI")
 OPENMAPS_AUTH_TITLE = env.str("OPENMAPS_AUTH_TITLE", default="Maxar OpenMaps")
-OPENMAPS_AUTH_APP_LINKS_FILE = env.str("OPENMAPS_AUTH_APP_LINKS_FILE", default=None)
-if OPENMAPS_AUTH_APP_LINKS_FILE:
-    with open(OPENMAPS_AUTH_APP_LINKS_FILE, "rt") as fh:
-        OPENMAPS_AUTH_APP_LINKS = json.load(fh)
-else:
-    OPENMAPS_AUTH_APP_LINKS = env.json(
-        "OPENMAPS_AUTH_APP_LINKS", default=[{"link": "/", "text": "MapEdit"}]
-    )
+OPENMAPS_AUTH_APP_LINKS = env.json(
+    "OPENMAPS_AUTH_APP_LINKS", default=[{"link": "/", "text": "MapEdit"}]
+)
 
 OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
 OSM_AUTH_URL = env.str("OSM_AUTH_URL", default=OSM_BASE_URL)
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
-OSM_USER_PASSWORD_FILE = env.str("OSM_USER_PASSWORD_FILE", default=None)
-if OSM_USER_PASSWORD_FILE:
-    with open(OSM_USER_PASSWORD_FILE, "rt") as fh:
-        OSM_USER_PASSWORD = fh.read()
-else:
-    OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
+OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 DEBUG = env.bool("DEBUG", default=False)
@@ -111,12 +100,7 @@ SESSION_ENGINE = env.str("SESSION_ENGINE", default=DEFAULT_SESSION_ENGINE)
 # Authentication
 OPENMAPS_AUTH_KEY = env.str("OPENMAPS_AUTH_KEY", default="")
 OPENMAPS_AUTH_OIDC_ENDPOINT = env.str("OPENMAPS_AUTH_OIDC_ENDPOINT", default=None)
-OPENMAPS_AUTH_SECRET_FILE = env.str("OPENMAPS_AUTH_SECRET_FILE", default=None)
-if OPENMAPS_AUTH_SECRET_FILE:
-    with open(OPENMAPS_AUTH_SECRET_FILE, "rt") as fh:
-        OPENMAPS_AUTH_SECRET = fh.read()
-else:
-    OPENMAPS_AUTH_SECRET = env.str("OPENMAPS_AUTH_SECRET", default="")
+OPENMAPS_AUTH_SECRET = env.str("OPENMAPS_AUTH_SECRET", default="")
 
 # Always have fallback email login backend.
 AUTHENTICATION_BACKENDS = ("openmaps_auth.backends.EmailBackend",)
@@ -151,12 +135,6 @@ SOCIAL_AUTH_WHITELISTED_DOMAINS = env.list(
 SOCIAL_AUTH_WHITELISTED_EMAILS = env.list(
     "OPENMAPS_AUTH_WHITELISTED_EMAILS", default=[]
 )
-SOCIAL_AUTH_WHITELISTED_EMAILS_FILE = env.str(
-    "OPENMAPS_AUTH_WHITELISTED_EMAILS_FILE", default=None
-)
-if SOCIAL_AUTH_WHITELISTED_EMAILS_FILE:
-    with open(SOCIAL_AUTH_WHITELISTED_EMAILS_FILE, "rb") as fh:
-        SOCIAL_AUTH_WHITELISTED_EMAILS.extend(json.load(fh))
 
 # Only use scrypt for password hashes.
 PASSWORD_HASHERS = ("django.contrib.auth.hashers.ScryptPasswordHasher",)
