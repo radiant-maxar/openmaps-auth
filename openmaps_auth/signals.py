@@ -18,11 +18,10 @@ def openmaps_login(sender, **kwargs):
     cookie_resp = requests.get(settings.OSM_BASE_URL)
     cookies = cookie_resp.cookies
     osm_session = cookies[settings.OSM_SESSION_KEY]
-    logger.debug("osm session for {}: {}".format(user.email, osm_session))
-    request.session[settings.OSM_SESSION_KEY] = osm_session
+    logger.debug(f"osm session for {user.email}: {osm_session}")
 
     # Get OSM CSRF token.
-    login_url = "{}/login".format(settings.OSM_BASE_URL)
+    login_url = f"{settings.OSM_BASE_URL}/login"
     login_resp = requests.get(login_url, cookies=cookies)
     authenticity_token = (
         BeautifulSoup(login_resp.content, features="html.parser")
@@ -43,5 +42,7 @@ def openmaps_login(sender, **kwargs):
         login_url, allow_redirects=False, cookies=cookies, data=login_data
     )
     if login_resp.headers.get("location") != settings.OSM_BASE_URL:
-        logger.error("Failed to login into OSM for user: {}".format(user.email))
+        logger.error(f"Failed to login into OSM for user: {user.email}")
         raise Exception
+    else:
+        request.session[settings.OSM_SESSION_KEY] = osm_session
