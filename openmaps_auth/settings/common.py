@@ -97,7 +97,12 @@ else:
 SESSION_COOKIE_AGE = env.int("SESSION_COOKIE_AGE", default=1209600)
 SESSION_COOKIE_DOMAIN = env.str("SESSION_COOKIE_DOMAIN", default=None)
 SESSION_COOKIE_NAME = env.str("SESSION_COOKIE_NAME", default="openmapsid")
+SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=False)
 SESSION_ENGINE = env.str("SESSION_ENGINE", default=DEFAULT_SESSION_ENGINE)
+
+# CSRF
+CSRF_COOKIE_NAME = env.str("CSRF_COOKIE_NAME", default="openmapscsrf")
+CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=SESSION_COOKIE_SECURE)
 
 # Authentication
 OPENMAPS_AUTH_KEY = env.str("OPENMAPS_AUTH_KEY", default="")
