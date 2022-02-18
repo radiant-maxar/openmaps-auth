@@ -18,6 +18,7 @@ OPENMAPS_AUTH_APP_LINKS = env.json(
 OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
 OSM_AUTH_URL = env.str("OSM_AUTH_URL", default=OSM_BASE_URL)
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
+OSM_SESSION_PREFIX = env.str("OSM_SESSION_PREFIX", default="rails:session")
 OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
@@ -90,6 +91,9 @@ CACHE_URL = env.cache_url(
 if CACHE_URL:
     CACHES = {"default": CACHE_URL}
     DEFAULT_SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
+    from ..serializers import openmaps_serde
+    CACHES["default"]["OPTIONS"] = {"serde": openmaps_serde}
 else:
     DEFAULT_SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
