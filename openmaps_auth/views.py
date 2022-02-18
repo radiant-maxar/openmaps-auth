@@ -29,7 +29,6 @@ def logout(request):
 
 
 def valid(request):
-    logger.info(request.COOKIES)
     if not request.user.is_authenticated:
         return JsonResponse({}, status=401)
     else:
