@@ -136,8 +136,11 @@ SOCIAL_AUTH_WHITELISTED_EMAILS = env.list(
     "OPENMAPS_AUTH_WHITELISTED_EMAILS", default=[]
 )
 
-# Only use scrypt for password hashes.
-PASSWORD_HASHERS = ("django.contrib.auth.hashers.ScryptPasswordHasher",)
+# Only use scrypt and pbkdf2 for password hashes.
+PASSWORD_HASHERS = (
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+)
 
 # Logging
 LOGGING = {
