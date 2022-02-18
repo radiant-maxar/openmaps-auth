@@ -96,6 +96,7 @@ else:
 # Sessions
 SESSION_COOKIE_AGE = env.int("SESSION_COOKIE_AGE", default=1209600)
 SESSION_COOKIE_DOMAIN = env.str("SESSION_COOKIE_DOMAIN", default=None)
+SESSION_COOKIE_NAME = env.str("SESSION_COOKIE_NAME", default="openmapsid")
 SESSION_ENGINE = env.str("SESSION_ENGINE", default=DEFAULT_SESSION_ENGINE)
 
 # Authentication
