@@ -168,7 +168,7 @@ LOGGING = {
         },
         "openmaps_auth": {
             "handlers": ["console"],
-            "level": env.str("LOG_LEVEL", default="INFO"),
+            "level": env.str("LOG_LEVEL", default="DEBUG"),
         },
     },
 }

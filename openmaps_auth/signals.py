@@ -2,6 +2,7 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.core.cache import cache
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 
@@ -20,6 +21,12 @@ def openmaps_login(sender, **kwargs):
     osm_session = cookies[settings.OSM_SESSION_KEY]
     logger.debug(f"osm session for {user.email}: {osm_session}")
 
+    # Get CSRF token from Rails cached session.
+    osm_session_key = f"{settings.OSM_SESSION_PREFIX}:{osm_session}"
+    logger.debug(f"osm session key: {osm_session_key}")
+    csrf_token = cache._cache.get(osm_session_key).get("_csrf_token")
+    logger.debug(f"osm csrf token (from cache): {csrf_token}")
+
     # Get OSM CSRF token.
     login_url = f"{settings.OSM_BASE_URL}/login"
     login_resp = requests.get(login_url, cookies=cookies)
@@ -28,6 +35,10 @@ def openmaps_login(sender, **kwargs):
         .find("meta", {"name": "csrf-token"})
         .get("content")
     )
+    logger.debug(f"osm csrf token (from http): {authenticity_token}")
+
+    csrf_token = cache._cache.get(osm_session_key).get("_csrf_token")
+    logger.debug(f"osm csrf token (from cache): {csrf_token}")
 
     # Login to OSM.
     login_data = {
