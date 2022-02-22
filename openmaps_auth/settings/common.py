@@ -176,4 +176,4 @@ USE_I18N = env.bool("USE_I18N", default=True)
 USE_TZ = env.bool("USE_TZ", default=True)
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = env.str("STATIC_URL", default="{}static/".format(BASE_PATH))
+STATIC_URL = env.str("STATIC_URL", default=f"{BASE_PATH}static/")
