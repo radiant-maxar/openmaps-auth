@@ -58,7 +58,7 @@ def python_ruby_memcache_deserializer(key, value, flags):
 
     elif flags & serde.FLAG_PICKLE:
         try:
-            if value[:2] == b'\x04\x08':
+            if value[:2] == b"\x04\x08":
                 return reader.loads(value)
             else:
                 buf = BytesIO(value)

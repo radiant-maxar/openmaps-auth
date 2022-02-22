@@ -93,6 +93,7 @@ if CACHE_URL:
     DEFAULT_SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
     from ..serializers import openmaps_serde
+
     CACHES["default"]["OPTIONS"] = {"serde": openmaps_serde}
 else:
     DEFAULT_SESSION_ENGINE = "django.contrib.sessions.backends.db"
