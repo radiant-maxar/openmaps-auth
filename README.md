@@ -59,15 +59,15 @@ The title to use in the generated pages, defaults to `Maxar OpenMaps`.
 
 #### `OPENMAPS_AUTH_WHITELISTED_EMAILS`
 
-#### OSM_BASE_URL
+#### `OSM_BASE_URL`
 
 Base URL to access OpenStreetMap at, defaults to `https://www.openstreetmap.org`.
 
-#### OSM_AUTH_URL
+#### `OSM_AUTH_URL`
 
 Base URL for accessing OpenStreetMap authentication endpoints, defaults to the value of `OSM_BASE_URL`.
 
-#### OSM_SESSION_KEY
+#### `OSM_SESSION_KEY`
 
 Cookie used by OpenStreetMap to store its session, defaults to [`_osm_session`](https://github.com/openstreetmap/openstreetmap-website/blob/master/config/initializers/session_store.rb#L4).
 
