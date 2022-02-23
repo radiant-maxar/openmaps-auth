@@ -32,6 +32,7 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
 
     ACR_VALUES = "http://idmanagement.gov/ns/assurance/ial/1"
     DEFAULT_SCOPE = ["openid", "email"]
+    JWT_DECODE_OPTIONS = {"leeway": 30}
     TOKEN_TTL_SEC = 5 * 60  # 5 minutes into the future.
 
     @property
