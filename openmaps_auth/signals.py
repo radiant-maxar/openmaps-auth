@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
+from os.path import split
 
 
 logger = logging.getLogger(__name__)
@@ -41,7 +42,7 @@ def openmaps_login(sender, **kwargs):
     login_resp = requests.post(
         login_url, allow_redirects=False, cookies=cookies, data=login_data
     )
-    if login_resp.headers.get("location") != settings.OSM_BASE_URL:
+    if split(login_resp.headers.get("location"))[0] != settings.OSM_BASE_URL:
         logger.error(f"Failed to login into OSM for user: {user.email}")
         raise Exception
     else:
