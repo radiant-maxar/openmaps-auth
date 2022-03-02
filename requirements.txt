@@ -102,9 +102,9 @@ defusedxml==0.7.1 \
     # via
     #   python3-openid
     #   social-auth-core
-django==4.0.2 \
-    --hash=sha256:110fb58fb12eca59e072ad59fc42d771cd642dd7a2f2416582aa9da7a8ef954a \
-    --hash=sha256:996495c58bff749232426c88726d8cd38d24c94d7c1d80835aafffa9bc52985a
+django==4.0.3 \
+    --hash=sha256:1239218849e922033a35d2a2f777cb8bee18bd725416744074f455f34ff50d0c \
+    --hash=sha256:77ff2e7050e3324c9b67e29b6707754566f58514112a9ac73310f60cd5261930
     # via -r base.in
 django-environ==0.8.1 \
     --hash=sha256:42593bee519a527602a467c7b682aee1a051c2597f98c45f4f4f44169ecdb6e5 \
@@ -138,9 +138,9 @@ pyjwt==2.3.0 \
     --hash=sha256:b888b4d56f06f6dcd777210c334e69c737be74755d3e5e9ee3fe67dc18a0ee41 \
     --hash=sha256:e0c4bb8d9f0af0c7f5b1ec4c5036309617d03d56932877f2f7a0beeb5318322f
     # via social-auth-core
-pymemcache==3.5.0 \
-    --hash=sha256:0969cb83db076f54191a39c904217e3db910b1518b0775cf70fa1dcb31a20424 \
-    --hash=sha256:5bf9c94a6bc9ad081dc9b5808284e027d755a0518f6375a57405552938c74d91
+pymemcache==3.5.1 \
+    --hash=sha256:91ca2afe0eff777d5f4c848affee5e469384a680a29bd6968186db940c7f56b7 \
+    --hash=sha256:c072a17366188294fd012a37fcb4d238e6dd27b96679982b11681c8baab6de59
     # via -r base.in
 python-jose[cryptography]==3.3.0 \
     --hash=sha256:55779b5e6ad599c6336191246e95eb2293a9ddebd555f796a65f838f07e5d78a \
