@@ -10,11 +10,7 @@ from django.dispatch import receiver
 logger = logging.getLogger(__name__)
 
 
-@receiver(user_logged_in)
-def openmaps_login(sender, **kwargs):
-    request = kwargs.get("request")
-    user = kwargs.get("user")
-
+def osm_login(user):
     # Generate OSM session.
     response = requests.get(settings.OSM_BASE_URL)
     cookies = response.cookies
@@ -42,11 +38,28 @@ def openmaps_login(sender, **kwargs):
     login_response = requests.post(
         login_url, allow_redirects=False, cookies=cookies, data=login_data
     )
+    return authenticity_token, cookies, login_response, osm_session
+
+
+@receiver(user_logged_in)
+def openmaps_login(sender, **kwargs):
+    request = kwargs.get("request")
+    user = kwargs.get("user")
+
+    authenticity_token, cookies, login_response, osm_session = osm_login(user)
     if login_response.headers.get("location") != settings.OSM_BASE_URL:
         new_user_url = f"{settings.OSM_BASE_URL}/user/new"
-        response = requests.post(new_user_url, cookies=cookies, data=login_data)
-        if response.status_code in (200, 204):
-            logger.info(f"Created new OSM user: {user.email} {response.status_code}")
+        new_user_data = {
+            "authenticity_token": authenticity_token,
+            "username": user.email,
+        }
+        response = requests.post(new_user_url, cookies=cookies, data=new_user_data)
+        if response.status_code == 204:
+            logger.info(f"Created new OSM user: {user.email}")
+            authenticity_token, cookies, login_response, osm_session = osm_login(user)
+            if login_response.headers.get("location") != settings.OSM_BASE_URL:
+                logger.error(f"Failed to login into OSM after user creation: {user.email}")
+                raise PermissionDenied
         else:
             logger.error(f"Failed to login into OSM for user: {user.email}")
             raise PermissionDenied
