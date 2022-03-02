@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import PermissionDenied
 from django.http import (
-    HttpResponseForbidden,
     HttpResponseRedirect,
     JsonResponse,
 )
