@@ -22,10 +22,10 @@ def index(request):
 
 
 def logout(request):
-    resp = LogoutView.as_view(template_name="index.html")(request)
+    response = LogoutView.as_view(template_name="index.html")(request)
     for cookie in request.COOKIES:
-        resp.delete_cookie(cookie)
-    return resp
+        response.delete_cookie(cookie)
+    return response
 
 
 def valid(request):
