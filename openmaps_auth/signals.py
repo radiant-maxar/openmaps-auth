@@ -58,7 +58,9 @@ def openmaps_login(sender, **kwargs):
             logger.info(f"Created new OSM user: {user.email}")
             authenticity_token, cookies, login_response, osm_session = osm_login(user)
             if login_response.headers.get("location") != settings.OSM_BASE_URL:
-                logger.error(f"Failed to login into OSM after user creation: {user.email}")
+                logger.error(
+                    f"Failed to login into OSM after user creation: {user.email}"
+                )
                 raise PermissionDenied
         else:
             logger.error(f"Failed to login into OSM for user: {user.email}")
