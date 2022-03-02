@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import PermissionDenied
 from django.http import (
-    HttpResponseForbidden,
     HttpResponseRedirect,
     JsonResponse,
 )
@@ -22,10 +21,10 @@ def index(request):
 
 
 def logout(request):
-    resp = LogoutView.as_view(template_name="index.html")(request)
+    response = LogoutView.as_view(template_name="index.html")(request)
     for cookie in request.COOKIES:
-        resp.delete_cookie(cookie)
-    return resp
+        response.delete_cookie(cookie)
+    return response
 
 
 def valid(request):
