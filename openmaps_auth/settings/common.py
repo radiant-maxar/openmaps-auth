@@ -102,6 +102,7 @@ SESSION_ENGINE = env.str("SESSION_ENGINE", default=DEFAULT_SESSION_ENGINE)
 # CSRF
 CSRF_COOKIE_NAME = env.str("CSRF_COOKIE_NAME", default="openmapscsrf")
 CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=SESSION_COOKIE_SECURE)
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 # Authentication
 OPENMAPS_AUTH_KEY = env.str("OPENMAPS_AUTH_KEY", default="")

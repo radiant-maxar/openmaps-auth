@@ -93,6 +93,10 @@ Defaults to `openmapscsrf`.
 
 Defaults to `False`.
 
+#### `CSRF_TRUSTED_ORIGINS`
+
+Defaults to `[]`.
+
 #### `DATABASE_URL`
 
 Defaults to `sqlite:////path/to/openmaps-auth/db.sqlite3`.
