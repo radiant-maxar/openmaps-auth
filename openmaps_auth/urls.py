@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.conf import settings
 from django.urls import include, path
 
@@ -10,9 +9,16 @@ urlpatterns = [
     path(f"{settings.BASE_PATH}v0/auth/login", views.login, name="openmaps_login"),
     path(f"{settings.BASE_PATH}v0/auth/logout", views.logout, name="openmaps_logout"),
     path(f"{settings.BASE_PATH}v0/auth/valid", views.valid, name="valid"),
-    path(f"{settings.BASE_PATH}v0/admin/", admin.site.urls),
     path(
         f"{settings.BASE_PATH}v0/social/",
         include("social_django.urls", namespace="social"),
     ),
 ]
+
+# Only care about using admin during development.
+if settings.DEBUG:
+    from django.contrib import admin
+
+    urlpatters += [
+        path(f"{settings.BASE_PATH}v0/admin/", admin.site.urls),
+    ]
