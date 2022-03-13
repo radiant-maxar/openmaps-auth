@@ -19,6 +19,6 @@ urlpatterns = [
 if settings.DEBUG:
     from django.contrib import admin
 
-    urlpatters += [
+    urlpatterns += [
         path(f"{settings.BASE_PATH}v0/admin/", admin.site.urls),
     ]
