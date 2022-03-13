@@ -4,7 +4,7 @@ import social_core.exceptions
 import social_django.views
 from django.conf import settings
 from django.contrib.auth.views import LoginView, LogoutView
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import BadRequest, PermissionDenied
 from django.http import (
     HttpResponseRedirect,
     JsonResponse,
@@ -53,6 +53,9 @@ if settings.OPENMAPS_AUTH_BACKEND:
                 *args,
                 **kwargs,
             )
+        except social_core.exceptions.AuthCanceled as error:
+            logger.info(error)
+            raise BadRequest
         except social_core.exceptions.AuthForbidden as denied:
             logger.info(denied)
             raise PermissionDenied
