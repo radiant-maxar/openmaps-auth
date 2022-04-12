@@ -1,4 +1,5 @@
 from pathlib import Path
+from django.core.exceptions import ImproperlyConfigured
 import environ
 
 env = environ.FileAwareEnv()
@@ -121,6 +122,17 @@ if OPENMAPS_AUTH_BACKEND == "login-gov":
     SOCIAL_AUTH_LOGIN_GOV_REDIRECT_URI = OPENMAPS_AUTH_REDIRECT_URI
     if OPENMAPS_AUTH_OIDC_ENDPOINT:
         SOCIAL_AUTH_LOGIN_GOV_OIDC_ENDPOINT = OPENMAPS_AUTH_OIDC_ENDPOINT
+elif OPENMAPS_AUTH_BACKEND == "okta-openidconnect":
+    AUTHENTICATION_BACKENDS = (
+        "openmaps_auth.backends.OktaOpenIdConnect",
+    ) + AUTHENTICATION_BACKENDS
+    SOCIAL_AUTH_OKTA_OPENIDCONNECT_KEY = OPENMAPS_AUTH_KEY
+    SOCIAL_AUTH_OKTA_OPENIDCONNECT_SECRET = OPENMAPS_AUTH_SECRET
+    SOCIAL_AUTH_OKTA_OPENIDCONNECT_REDIRECT_URI = OPENMAPS_AUTH_REDIRECT_URI
+    if OPENMAPS_AUTH_OIDC_ENDPOINT:
+        SOCIAL_AUTH_OKTA_OPENIDCONNECT_API_URL = OPENMAPS_AUTH_OIDC_ENDPOINT
+    else:
+        raise ImproperlyConfigured("Must provide endpoint for Okta")
 elif OPENMAPS_AUTH_BACKEND == "openstreetmap":
     AUTHENTICATION_BACKENDS = (
         "openmaps_auth.backends.OpenStreetMapOAuth",

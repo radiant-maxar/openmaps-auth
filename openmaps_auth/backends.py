@@ -2,12 +2,16 @@ import re
 import os
 import secrets
 import time
+from urllib.parse import urljoin, urlparse, urlunparse
 from xml.dom import minidom
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from jose import jwt
+from social_core.backends.okta_openidconnect import (
+    OktaOpenIdConnect as BaseOktaOpenIdConnect,
+)
 from social_core.backends.open_id_connect import OpenIdConnectAuth
 from social_core.backends.openstreetmap import (
     OpenStreetMapOAuth as BaseOpenStreetMapOAuth,
@@ -99,6 +103,33 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
         user_details["email_verified"] = response["email_verified"]
         user_details["username"] = username
         return user_details
+
+
+class OktaOpenIdConnect(BaseOktaOpenIdConnect):
+    def get_redirect_uri(self, state=None):
+        return self.setting("REDIRECT_URI", super().get_redirect_uri(state))
+
+    # This fix for Okta OIDC configuration URLs copied from:
+    # https://github.com/python-social-auth/social-core/pull/663
+    def oidc_config_url(self):
+        # https://developer.okta.com/docs/reference/api/oidc/#well-known-openid-configuration
+        url = urlparse(self.api_url())
+
+        # If the URL path does not contain an authorizedServerId, we need
+        # to truncate the path in order to generate a proper openid-configuration
+        # URL.
+        if url.path == "/oauth2/":
+            url = url._replace(path="")
+
+        return urljoin(
+            urlunparse(url),
+            "./.well-known/openid-configuration?client_id={}".format(
+                self.setting("KEY")
+            ),
+        )
+
+    def oidc_config(self):
+        return self.get_json(self.oidc_config_url())
 
 
 class OpenStreetMapOAuth(BaseOpenStreetMapOAuth):
