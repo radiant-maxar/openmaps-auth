@@ -5,7 +5,6 @@ This application enables authentication integrations for Maxar's OpenMapping env
 ## Requirements
 
 * Python 3.7+
-* OpenStreetMap instance, either public or private.
 * OAuth or OIDC credentials when using an identity provider.
 
 ## Usage
