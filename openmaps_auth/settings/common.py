@@ -15,6 +15,14 @@ OPENMAPS_AUTH_TITLE = env.str("OPENMAPS_AUTH_TITLE", default="Maxar OpenMaps")
 OPENMAPS_AUTH_APP_LINKS = env.json(
     "OPENMAPS_AUTH_APP_LINKS", default=[{"link": "/", "text": "MapEdit"}]
 )
+OPENMAPS_AUTH_CLIENT_TLS = env.bool("OPENMAPS_AUTH_CLIENT_TLS", default=False)
+OPENMAPS_AUTH_CLIENT_TLS_CERT_HEADER = env.bool(
+    "OPENMAPS_AUTH_CLIENT_TLS_CERT_HEADER", default="X-TLS-Client-Cert"
+)
+OPENMAPS_AUTH_CLIENT_TLS_VERIFY_HEADER = env.bool(
+    "OPENMAPS_AUTH_CLIENT_TLS_VERIFY_HEADER", default="X-TLS-Client-Verify"
+)
+OPENMAPS_AUTH_OSM_SESSION = env.bool("OPENMAPS_AUTH_OSM_SESSION", default=False)
 
 OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
 OSM_AUTH_URL = env.str("OSM_AUTH_URL", default=OSM_BASE_URL)
@@ -49,6 +57,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if OPENMAPS_AUTH_CLIENT_TLS:
+    MIDDLEWARE.append("openmaps_auth.tls.TLSClientMiddleware")
 
 ROOT_URLCONF = env.str("ROOT_URLCONF", default="openmaps_auth.urls")
 
@@ -111,6 +122,10 @@ OPENMAPS_AUTH_OIDC_ENDPOINT = env.str("OPENMAPS_AUTH_OIDC_ENDPOINT", default=Non
 
 # Always have fallback email login backend.
 AUTHENTICATION_BACKENDS = ("openmaps_auth.backends.EmailBackend",)
+if OPENMAPS_AUTH_CLIENT_TLS:
+    AUTHENTICATION_BACKENDS = AUTHENTICATION_BACKENDS + (
+        "openmaps_auth.tls.TLSClientBackend",
+    )
 
 # Set up social_auth variables when backend is set.
 if OPENMAPS_AUTH_BACKEND == "login-gov":
@@ -147,12 +162,14 @@ LOGOUT_REDIRECT_URL = "index"
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "index"
 
 # Restrict access.
-SOCIAL_AUTH_WHITELISTED_DOMAINS = env.list(
+OPENMAPS_AUTH_WHITELISTED_DOMAINS = env.list(
     "OPENMAPS_AUTH_WHITELISTED_DOMAINS", default=[]
 )
-SOCIAL_AUTH_WHITELISTED_EMAILS = env.list(
+SOCIAL_AUTH_WHITELISTED_DOMAINS = OPENMAPS_AUTH_WHITELISTED_DOMAINS
+OPENMAPS_AUTH_WHITELISTED_EMAILS = env.list(
     "OPENMAPS_AUTH_WHITELISTED_EMAILS", default=[]
 )
+SOCIAL_AUTH_WHITELISTED_EMAILS = OPENMAPS_AUTH_WHITELISTED_EMAILS
 
 # Only use scrypt and pbkdf2 for password hashes.
 PASSWORD_HASHERS = (
@@ -172,11 +189,13 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": env.str("LOG_LEVEL", default="INFO"),
+            "level": env.str("DJANGO_LOG_LEVEL", default="INFO"),
+            "propagate": True,
         },
         "openmaps_auth": {
             "handlers": ["console"],
-            "level": env.str("LOG_LEVEL", default="INFO"),
+            "level": env.str("OPENMAPS_AUTH_LOG_LEVEL", default="INFO"),
+            "propagate": True,
         },
     },
 }
