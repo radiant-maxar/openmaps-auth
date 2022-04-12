@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.conf import settings
 
 
 class OpenMapsAuthConfig(AppConfig):
@@ -7,4 +8,5 @@ class OpenMapsAuthConfig(AppConfig):
     verbose_name = "OpenMaps Auth"
 
     def ready(self):
-        from . import signals
+        if settings.OPENMAPS_AUTH_OSM_SESSION:
+            from .signals import osm

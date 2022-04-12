@@ -12,6 +12,8 @@ from django.http import (
 from django.shortcuts import render
 from django.urls import reverse
 
+from .cookies import set_auth_cookies
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,15 +40,6 @@ def valid(request):
         return JsonResponse({})
 
 
-def set_osm_cookie(request, response):
-    response.set_cookie(
-        settings.OSM_SESSION_KEY,
-        request.session[settings.OSM_SESSION_KEY],
-        domain=settings.SESSION_COOKIE_DOMAIN,
-    )
-    return response
-
-
 if settings.OPENMAPS_AUTH_BACKEND:
 
     def callback(request, *args, **kwargs):
@@ -64,7 +57,7 @@ if settings.OPENMAPS_AUTH_BACKEND:
             logger.info(denied)
             raise PermissionDenied
 
-        return set_osm_cookie(request, response)
+        return set_auth_cookies(request, response)
 
     def login(request):
         return social_django.views.auth(request, settings.OPENMAPS_AUTH_BACKEND)
@@ -73,6 +66,6 @@ else:
 
     def callback(request):
         response = HttpResponseRedirect(reverse("index"))
-        return set_osm_cookie(request, response)
+        return set_auth_cookies(request, response)
 
     login = LoginView.as_view(template_name="login.html")
