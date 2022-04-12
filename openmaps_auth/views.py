@@ -27,6 +27,10 @@ def logout(request):
     return response
 
 
+def status(request):
+    return JsonResponse({"status": "ok"})
+
+
 def valid(request):
     if not request.user.is_authenticated:
         return JsonResponse({}, status=401)
