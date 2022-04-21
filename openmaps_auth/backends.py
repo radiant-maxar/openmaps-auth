@@ -1,4 +1,3 @@
-import re
 import os
 import secrets
 import time
@@ -16,19 +15,6 @@ from social_core.backends.open_id_connect import OpenIdConnectAuth
 from social_core.backends.openstreetmap import (
     OpenStreetMapOAuth as BaseOpenStreetMapOAuth,
 )
-
-
-class EmailBackend(ModelBackend):
-    def authenticate(self, request, username=None, password=None, **kwargs):
-        UserModel = get_user_model()
-        try:
-            user = UserModel.objects.get(email=username)
-        except UserModel.DoesNotExist:
-            return None
-        else:
-            if user.check_password(password):
-                return user
-        return None
 
 
 class LoginGovOpenIdConnect(OpenIdConnectAuth):
@@ -98,10 +84,7 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
 
     def get_user_details(self, response):
         user_details = super().get_user_details(response)
-        email_local = user_details["email"].split("@")[0]
-        username = re.sub("[^0-9A-Za-z]", "_", email_local)
         user_details["email_verified"] = response["email_verified"]
-        user_details["username"] = username
         return user_details
 
 

@@ -120,8 +120,8 @@ CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 OPENMAPS_AUTH_KEY = env.str("OPENMAPS_AUTH_KEY", default="")
 OPENMAPS_AUTH_OIDC_ENDPOINT = env.str("OPENMAPS_AUTH_OIDC_ENDPOINT", default=None)
 
-# Always have fallback email login backend.
-AUTHENTICATION_BACKENDS = ("openmaps_auth.backends.EmailBackend",)
+# Always have fallback model backend.
+AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 if OPENMAPS_AUTH_CLIENT_TLS:
     AUTHENTICATION_BACKENDS = AUTHENTICATION_BACKENDS + (
         "openmaps_auth.tls.TLSClientBackend",
@@ -156,12 +156,16 @@ elif OPENMAPS_AUTH_BACKEND == "openstreetmap":
     SOCIAL_AUTH_OPENSTREETMAP_SECRET = OPENMAPS_AUTH_SECRET
     SOCIAL_AUTH_OPENSTREETMAP_REDIRECT_URI = OPENMAPS_AUTH_REDIRECT_URI
 
-# Ensure proper redirects when using Email or Social login.
+# Username is email address.
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+
+# Ensure proper redirects when using email or social login.
 LOGIN_REDIRECT_URL = "callback"
 LOGOUT_REDIRECT_URL = "index"
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "index"
 
-# Restrict access.
+# When using social or tls login, restrict access based on email or domain
+# whitelists if they are defined.
 OPENMAPS_AUTH_WHITELISTED_DOMAINS = env.list(
     "OPENMAPS_AUTH_WHITELISTED_DOMAINS", default=[]
 )

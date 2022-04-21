@@ -1,5 +1,4 @@
 import logging
-import re
 import urllib.parse
 
 from django.conf import settings
@@ -37,15 +36,14 @@ def email_from_tls_request(request):
         client_san_ext = client_cert.extensions.get_extension_for_oid(
             x509.oid.ExtensionOID.SUBJECT_ALTERNATIVE_NAME
         )
-        client_emails = client_san_ext.value.get_values_for_type(x509.RFC822Name)
-        if len(client_emails) > 1:
-            logger.warn(
-                "Multiple email signatures encountered, only first one is used."
-            )
-        elif client_emails:
-            email = client_emails[0]
+        if client_san_ext:
+            client_emails = client_san_ext.value.get_values_for_type(x509.RFC822Name)
+            if len(client_emails) > 1:
+                logger.warn("multiple email signatures encountered, only first is used")
+            elif client_emails:
+                email = client_emails[0]
     elif verify and verify.startswith("FAIL"):
-        logger.info(f"tls client failure: {verify}")
+        logger.warn(f"tls client failure: {verify}")
     return email
 
 
@@ -72,11 +70,10 @@ class TLSClientBackend(ModelBackend):
 
         UserModel = get_user_model()
         try:
-            user = UserModel.objects.get(email=email)
+            user = UserModel.objects.get(username=email)
         except UserModel.DoesNotExist:
             logger.info(f"creating user for {email}")
-            username = re.sub("[^0-9A-Za-z]", "_", email.split("@")[0])
-            user = UserModel(username=username, email=email)
+            user = UserModel(username=email, email=email)
             user.save()
 
         logger.info(f"tls client authenticated: {email}")
@@ -100,12 +97,12 @@ class TLSClientMiddleware:
         if not user or not user.is_authenticated:
             return self.get_response(request)
         if request.path_info == reverse("openmaps_login"):
-            logger.info(f"tls client login request: {user.email}")
+            logger.info(f"tls client login request: {user}")
             login(request, user)
             response = HttpResponseRedirect(reverse("index"))
             return set_auth_cookies(request, response)
         elif request.path_info == reverse("valid"):
-            logger.info(f"tls client valid request: {user.email}")
+            logger.info(f"tls client valid request: {user}")
             request.user = user
         else:
             logger.warn(
