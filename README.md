@@ -1,6 +1,6 @@
 # OpenMaps Authentication API
 
-This application enables authentication integrations for Maxar's OpenMapping environments. Specifically, this provides a simple API for mediating access to a private OpenStreetMap instance via external identity providers.
+This application enables authentication integrations for Maxar's OpenMapping environments. Specifically, this provides a simple API for mediating access to private web applications via external identity providers.
 
 ## Requirements
 
