@@ -4,17 +4,17 @@
 <title>{% if request.user.is_authenticated %}{{ openmaps_auth.title }}{% else %}Log in to {{ openmaps_auth.title }}{% endif %}</title>
 <meta charset="UTF-8">
 <style>
+  body {
+    width: 100%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
     body {
-        width: 100%;
-        margin: 0 auto;
-        font-family: Arial;
+      background-color: #FFFFFF;
+      color: #4C4B48;
+      background-color: #f5f5f5;
     }
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #FFFFFF;
-        color: #4C4B48;
-        background-color: #f5f5f5;
-      }
     a {
       font-size: 1.5rem;
       display: flex;
@@ -507,6 +507,7 @@
   .maxar_logo {
     font-size: 20px;
   }
+}
 </style>
 </head>
 <body>
