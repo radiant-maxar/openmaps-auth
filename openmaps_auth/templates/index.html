@@ -25,7 +25,6 @@
 </div>
 <div class="section">
 {% for app_link in openmaps_auth.app_links %}
-    {% with "../static/"|add:app_link.text|add:"_logo.png" as template %}
     <div class="container_spacing">
         <article>
             <div class="app_card">
@@ -40,7 +39,6 @@
                 <a class="app-button" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">Use {{ app_link.text}}</a>
             </div>
         </article>
-    {% endwith %}
     </div>
 {% endfor %}
 </div>
