@@ -5,9 +5,9 @@
 <meta charset="UTF-8">
 <style>
   body {
-    width: 100%;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
+      width: 35em;
+      margin: 0 auto;
+      font-family: Tahoma, Verdana, Arial, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     body {
@@ -169,9 +169,6 @@
       flex-direction: row;
       background-color: #f5f5f5;
     }
-    /* .container_spacing:nth-child(4n) {
-      flex-basis: 75%;
-    } */
     .container_spacing {
       margin: 0.5em;
       flex-grow: 1;
@@ -473,41 +470,41 @@
     .container * {
       box-sizing: border-box;
     }
-  li {
-    padding-left: 2rem;
-    padding-right: 2rem;
-    list-style-type: none;
+    li {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      list-style-type: none;
+    }
+    .child {
+      flex: 1 0 21%;
+      margin: 5px;
+      height: 100px;
+      background-color: blue;
+    }
+    hr {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border: 0;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    .underline {
+      font-size: 30px;
+      font-weight: 600;
+      color: #212529;
+      justify-content: flex-start;
+      text-decoration: underline;
+      text-decoration-style: single;
+      text-decoration-color: #fcaf17;
+      padding-bottom: 1rem;
+      display: flex;
+    }
+    a.image_holder.app_img.img_container.size.underline:hover {
+      color: #000000;
+    }
+    .maxar_logo {
+      font-size: 20px;
+    }
   }
-  .child {
-    flex: 1 0 21%; /* explanation below */
-    margin: 5px;
-    height: 100px;
-    background-color: blue;
-  }
-  hr {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: 0;
-    border-top: 1px solid rgba(0,0,0,0.1);
-  }
-  .underline {
-    font-size: 30px;
-    font-weight: 600;
-    color: #212529;
-    justify-content: flex-start;
-    text-decoration: underline;
-    text-decoration-style: single;
-    text-decoration-color: #fcaf17;
-    padding-bottom: 1rem;
-    display: flex;
-  }
-  a.image_holder.app_img.img_container.size.underline:hover {
-    color: #000000;
-  }
-  .maxar_logo {
-    font-size: 20px;
-  }
-}
 </style>
 </head>
 <body>
