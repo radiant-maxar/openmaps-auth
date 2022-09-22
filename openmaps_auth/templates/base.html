@@ -5,27 +5,516 @@
 <meta charset="UTF-8">
 <style>
     body {
-        width: 35em;
+        width: 100%;
         margin: 0 auto;
-        font-family: Tahoma, Verdana, Arial, sans-serif;
+        font-family: Arial;
     }
     @media (prefers-color-scheme: dark) {
       body {
-        background-color: #3B3B3D;
-        color: #CBCFCB;
+        background-color: #FFFFFF;
+        color: #4C4B48;
+        background-color: #f5f5f5;
       }
-      a {
-        color: #6CAC4D;
-      }
-      a:hover {
-        color: #429F14;
-      }
+    a {
+      font-size: 1.5rem;
+      display: flex;
+      float: left;
+      padding-bottom: 0.25rem;
+      vertical-align: top;
+      color: #4C4B48;
+      text-decoration: none;
     }
+    article {
+      box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+      border: solid;
+      border-color: #585a5d;
+      margin-top: 2rem;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+      background-color: #FFFFFF;
+    }
+    a:hover {
+      color: #FFFFFF;
+    }
+    button {
+      float: right;
+    }
+    h3 {
+      float: right;
+      margin-right: 2rem;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto auto 0;
+      max-height: 300px;
+      max-width: 300px;
+    }
+    .header_spacing {
+      width: 100%;
+      display: inline-block;
+      background-color: #FFFFFF;
+      color: #000000;
+      vertical-align: middle;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    a.app-button:hover {
+      color: #fcaf17;
+    }
+    a.app-button {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+      text-transform: none;
+      background-color: #FFFFFF;
+      border-width: 2px;
+      border-style: solid;
+      border-color: #fcaf17;
+      box-sizing: border-box;
+      color: black;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s ease-in-out;
+      padding: 8px 32px;
+      margin-left: 1em;
+    }
+    .app-button {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+      text-transform: none;
+      background-color: #FFFFFF;
+      border-width: 2px;
+      border-style: solid;
+      border-color: #fcaf17;
+      box-sizing: border-box;
+      color: black;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s ease-in-out;
+      padding: 8px 32px;
+      margin-left: 1em;
+    }
+    .app_button:hover {
+      color: #fcaf17
+    }
+    .logo_img {
+      font-size: 50px;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold;
+      float: left;
+      padding: 1em;
+      clear: both;
+      display: flex;
+      overflow: hidden;
+      white-space: nowrap;
+      margin-left: 2rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      line-height: 1.15;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .img_container {
+      display: flex;
+      flex-direction: column;
+      align-content: space-between;
+      justify-content: space-between;
+      z-index: 0;
+      align-items: center;
+      justify-content: center;
+    }
+    .image_holder:hover{
+      transform: scale(1.04);
+    }
+    .app_card {
+      text-align: center;
+      height: 200px;
+      padding-bottom: 2rem;
+      background-color: #FFFFFF;
+      color: #212529;
+      bottom:150px;
+      z-index: 1;
+      width: 100%;
+    }
+    .app_description {
+      color: #6c757d;
+      height: 80px;
+      padding-top: 3rem;
+      padding-left: 1em;
+      padding-right: 1em;
+      font-style: italic;
+    }
+    .section {
+      margin-left: 1rem;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      background-color: #f5f5f5;
+    }
+    /* .container_spacing:nth-child(4n) {
+      flex-basis: 75%;
+    } */
+    .container_spacing {
+      margin: 0.5em;
+      flex-grow: 1;
+      flex-basis: 32%;
+      justify-content: center;
+    }
+    .app_link {
+      width: 100%;
+      height: auto;
+      display: flex;
+    }
+    .app_img {
+      display: flex;
+      transition: all 0.3s ease-in-out;
+      /* height: 250px;
+      width: 200px; */
+      width: 250px;
+      height: 300px;
+      align-self: center;
+    }
+    .size {
+      margin-top: 1rem;
+      vertical-align: middle;
+      border-style: none;
+      width: inherit;
+      height: auto;
+      align-self: center;
+      /* height: 200px !important; */
+    }
+    .text_color {
+      color: #fcaf17;
+      display: flex;
+      float: left;
+      padding-bottom: 2rem;
+      vertical-align: top;
+      text-decoration: none;
+    }
+    .app_text {
+      font-size: 15px;
+      width: 100%;
+      align-content: center;
+      color: #212529;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px #FFFFFF;
+      z-index: 5;
+      margin-bottom: -2rem;
+    }
+    .title_text {
+      text-align: center !important;
+      color: white !important;
+      background-color: #B2AFAA;
+      background-repeat: no-repeat !important;
+      background-attachment: scroll !important;
+      background-position: center center !important;
+      background-size: cover;
+      height: 200px;
+      width: 100% !important;
+      margin-top: -2rem;
+    }
+    .center_text {
+      width: 100%;
+      max-height: 100%;
+      align-content: center;
+      background-color: #B2AFAA
+      color: #FFFFFF;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px #212529;
+      z-index: 5;
+      height: 100vh;
+      font-size: 40px;
+    }
+    .image_container {
+      padding-top: 2rem;
+      padding-left: 2rem;
+    }
+    .container {
+      position: relative;
+      text-align: center;
+      width: 25%;
+    }
+    .logout_button {
+      display: inline-block;
+      background-color: #FFFFFF;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 0.125rem;
+      border-style: solid;
+      border-width: 0.125rem;
+      line-height: 1.15;
+      font-family: Arial, Helvetica, sans-serif;
+      border-color: #4C4B48;
+    }
+    .login_button {
+      color: #212529;
+      height: 20px;
+      margin-right: 2rem;
+      display: inline-block;
+      background-color: #FFFFFF;;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      padding-right: 1.5rem;
+      padding-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      font-size: 1.17em;
+      font-weight: bold;
+      border-radius: 0.125rem;
+      border-style: solid;
+      border-width: 0.125rem;
+      line-height: 1.15;
+      font-family: Arial, Helvetica, sans-serif;
+      border-color: #4C4B48;
+    }
+    a.login_button:hover {
+      display: inline-block;
+      background-color: #FFFFFF;
+      font-size: 1.17em;
+      color: #212529;
+      border-radius: 0.125rem;
+      border-style: solid;
+      border-width: 0.125rem;
+      line-height: 1.15;
+      font-family: Arial, Helvetica, sans-serif;
+      border-color: #fcaf17;
+    }
+    button.logout_button:hover {
+      display: inline-block;
+      background-color: #FFFFFF;
+      font-size: 1rem;
+      border-radius: 0.125rem;
+      border-style: solid;
+      border-width: 0.125rem;
+      line-height: 1.15;
+      font-family: Arial, Helvetica, sans-serif;
+      border-color: #fcaf17;
+    }
+    .right_wrap {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      text-align: center;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      padding: 0.75rem 1.5rem;
+    }
+    .header {
+      flex-wrap: wrap;
+      flex-direction: column;
+      padding-bottom: 1em;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: #4C4B48;
+      color: #FFFFFF;
+      vertical-align: middle;
+      padding: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form_title {
+      padding-left: 2rem;
+      padding-bottom: 0.5rem;
+      display: block;
+      padding-top: 1rem;
+      color: #68707f;
+      font-weight: bold;
+      font-size: 30px;
+    }
+    .form_border {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      padding-bottom: 2rem;
+      border-style: none;
+      border-width: 0;
+      border: 1px solid #cedced;
+      background-color: #FFFFFF;
+    }
+    .form_label {
+      padding-left: 2rem;
+      padding-bottom: 0.5rem;
+      display: block;
+      padding-top: 1rem;
+      color: #68707f;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .form_input {
+      padding-top: 3rem;
+      width: 100%;
+    }
+    .form_button {
+      text-align: center;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      width: 85%;
+      line-height: 1;
+      cursor: pointer;
+      border: 0;
+      border-radius: 0.25rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #68707f;
+      font-weight: 700
+    }
+    .button_align {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bg-dark {
+      background-color: #4C4B48;
+      color: #FFFFFF;
+    }
+    .text-middle {
+      vertical-align: middle;
+    }
+    .mr2 {
+      color: #212529;
+      padding: 0.75rem 1.5rem;
+    }
+    fieldset {
+      width: 25%;
+      align-items: center;
+    }
+    .footer {
+      padding-left: 2rem;
+      line-height: 1rem;
+    }
+    .form_align {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 2em;
+      box-size: border-box;
+      width: 100%;
+      padding-bottom: 3em;
+      padding-around: 4em;
+      margin-bottom: 3em;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    table {
+      table-layout:fixed
+    }
+    tbody {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+    }
+    .input_size {
+      width: 100%;
+    }
+    input[type=text] {
+      height: 3rem;
+      font-size: 1.25rem;
+      width: 85%;
+      background-color: #f2f9ff;
+      border: 1px solid #cedced;
+      color: #68707f;
+      font-weight: 700;
+    }
+    input[type=password] {
+      height: 3rem;
+      width: 100%;
+      font-size: 1.25rem;
+      background-color: #f2f9ff;
+      border: 1px solid #cedced;
+      margin-bottom: 2rem;
+      color: #68707f;
+      font-weight: 700;
+    }
+    .form_input {
+      width: 100%;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    .container * {
+      box-sizing: border-box;
+    }
+  li {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    list-style-type: none;
+  }
+  .child {
+    flex: 1 0 21%; /* explanation below */
+    margin: 5px;
+    height: 100px;
+    background-color: blue;
+  }
+  hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+  .underline {
+    font-size: 30px;
+    font-weight: 600;
+    color: #212529;
+    justify-content: flex-start;
+    text-decoration: underline;
+    text-decoration-style: single;
+    text-decoration-color: #fcaf17;
+    padding-bottom: 1rem;
+    display: flex;
+  }
+  a.image_holder.app_img.img_container.size.underline:hover {
+    color: #000000;
+  }
+  .maxar_logo {
+    font-size: 20px;
+  }
 </style>
 </head>
 <body>
-<h1>Welcome to {{ openmaps_auth.title }}!</h1>
 {% block body %}
 {% endblock body %}
 </body>
+<hr/>
+<footer class="footer">
+  <p> © Copyright Maxar</p>
+</footer>
 </html>
