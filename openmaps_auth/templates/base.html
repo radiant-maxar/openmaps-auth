@@ -402,11 +402,33 @@
     width: 25%;
     align-items: center;
   }
+  footer {
+    position: fixed;
+    bottom: 1px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px;
+  }
   .footer {
     padding-left: 2rem;
     line-height: 1rem;
   }
   .form_align {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2em;
+    box-size: border-box;
+    width: 100%;
+    padding-bottom: 3em;
+    padding-around: 4em;
+    margin-bottom: 3em;
+  }
+  .form_align_blur {
+    pointer-events: none;
+    filter: blur(4px);
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -425,9 +447,6 @@
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-  }
-  table {
-    table-layout:fixed
   }
   tbody {
     display: flex;
@@ -506,8 +525,9 @@
 {% block body %}
 {% endblock body %}
 </body>
-<hr/>
+
 <footer class="footer">
+  <hr/>
   <p> © Copyright Maxar</p>
 </footer>
 </html>

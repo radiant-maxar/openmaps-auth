@@ -19,26 +19,56 @@
 <div class="title_text">
     <h1 class="center_text">Welcome to {{ openmaps_auth.title }}!</h1>
 </div>
+{% if request.user.is_authenticated %}
 <div class="app_text">
     <h1>FEATURED APPLICATIONS</h1>
 </div>
 <div class="section">
-{% for app_link in openmaps_auth.app_links %}
-    <div class="container_spacing">
-        <article>
-            <div class="app_card">
-                <a class="image_holder app_img img_container size underline" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">
-                    {{ app_link.text }}
-                </a>
-                <div>
-                    <p class="app_description">
-                        {{ app_link.description }}
-                    </p>
+    {% for app_link in openmaps_auth.app_links %}
+        <div class="container_spacing">
+            <article>
+                <div class="app_card">
+                    <a class="image_holder app_img img_container size underline" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">
+                        {{ app_link.text }}
+                    </a>
+                    <div>
+                        <p class="app_description">
+                            {{ app_link.description }}
+                        </p>
+                    </div>
+                    <a class="app-button" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">Use {{ app_link.text}}</a>
                 </div>
-                <a class="app-button" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">Use {{ app_link.text}}</a>
-            </div>
-        </article>
+            </article>
+        </div>
+    {% endfor %}
     </div>
-{% endfor %}
-</div>
+{% else %}
+    <form class="form_align_blur" name="login" method="post" action="{% url 'openmaps_login' %}">
+      <table>
+      <fieldset class="form_border">
+        <div>
+          <h1 class="form_title">Sign In:</h3>
+        </div>
+        <div>
+          <label class="form_label">Username:<label>
+        </div>
+        <div class="input_size" >
+          <li class="form_input"></li>
+        </div>
+        <div class="input_size">
+          <label class="form_label">Password:<label>
+        </div>
+        <div class="input_size">
+          <li class"form_input"></li>
+        </div>
+        <div class="button_align">
+          <input class="form_button" type="reset">
+        </div>
+        <div class="button_align">
+          <input class="form_button" type="submit" value="Login">
+        </div>
+      </fieldset>
+      </table>
+    </form>
+{% endif %}
 {% endblock body %}
