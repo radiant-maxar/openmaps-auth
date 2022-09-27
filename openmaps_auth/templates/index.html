@@ -43,32 +43,8 @@
     {% endfor %}
     </div>
 {% else %}
-    <form class="form_align_blur" name="login" method="post" action="{% url 'openmaps_login' %}">
-      <table>
-      <fieldset class="form_border">
-        <div>
-          <h1 class="form_title">Sign In:</h3>
-        </div>
-        <div>
-          <label class="form_label">Username:<label>
-        </div>
-        <div class="input_size" >
-          <li class="form_input"></li>
-        </div>
-        <div class="input_size">
-          <label class="form_label">Password:<label>
-        </div>
-        <div class="input_size">
-          <li class"form_input"></li>
-        </div>
-        <div class="button_align">
-          <input class="form_button" type="reset">
-        </div>
-        <div class="button_align">
-          <input class="form_button" type="submit" value="Login">
-        </div>
-      </fieldset>
-      </table>
-    </form>
+  <div class="login_request_text">
+    <h1>Please login to access full suite of applications</h1>
+  </div>
 {% endif %}
 {% endblock body %}
