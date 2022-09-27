@@ -1,19 +1,51 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load i18n %}
 {% block body %}
+<div class="header_spacing">
+<div class="right_wrap">
+    <h3 class="mr2 maxar_logo">MAXAR</h3>
+</div>
 {% if request.user.is_authenticated %}
-<h3>Logged in as {{ request.user.email }}</h3>
-
-<p>
-{% for app_link in openmaps_auth.app_links %}
-<a href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">{{ app_link.text }}</a>
-{% endfor %}
-<p>
-<a href="{% url 'openmaps_logout' %}"><button>Logout</button></a>
-</p>
+<div class="right_wrap">
+    <h3 class="mr2">Logged in as {{ request.user.email }} </h3>
+    <a class="login_button" href="{% url 'openmaps_logout' %}">{% translate "Log out" %}</a>
+</div>
 {% else %}
-<h3>Please log in to continue</h3>
-<p>
-<a href="{% url 'openmaps_login' %}"><button>Login</button></a>
-</p>
+<div class="right_wrap">
+    <h3 class="mr2">Please log in to continue</h3>
+    <a class="login_button" href="{% url 'openmaps_login' %}">{% translate "Log in" %}</a>
+</div>
+{% endif %}
+</div>
+<div class="title_text">
+    <h1 class="center_text">Welcome to {{ openmaps_auth.title }}!</h1>
+</div>
+{% if request.user.is_authenticated %}
+<div class="app_text">
+    <h1>FEATURED APPLICATIONS</h1>
+</div>
+<div class="section">
+    {% for app_link in openmaps_auth.app_links %}
+        <div class="container_spacing">
+            <article>
+                <div class="app_card">
+                    <a class="image_holder app_img img_container size underline" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">
+                        {{ app_link.text }}
+                    </a>
+                    <div>
+                        <p class="app_description">
+                            {{ app_link.description|default:app_link.text }}
+                        </p>
+                    </div>
+                    <a class="app-button" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">Use {{ app_link.text}}</a>
+                </div>
+            </article>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+  <div class="login_request_text">
+    <h1>Please login to access full suite of applications</h1>
+  </div>
 {% endif %}
 {% endblock body %}

@@ -1,16 +1,57 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load i18n %}
 {% block body %}
-<h3>Please log in to continue</h3>
-<form name="login" method="post" action="{% url 'openmaps_login' %}">
-  <table>
-    {{ form }}
-    <tr>
-      {% csrf_token %}
-    </tr>
-    <tr>
-      <td><input type="reset"></td>
-      <td><input type="submit" value="Login"></td>
-    </tr>
-  </table>
-</form>
+<div class="header_spacing">
+  <div class="right_wrap">
+    <h3 class="mr2 maxar_logo">MAXAR</h3>
+  </div>
+  <div class="right_wrap">
+    <h3 class="mr2">Please login to continue</h3>
+    <p class"mr2"></p>
+  </div>
+</div>
+<div>
+  <form class="form_align" name="login" method="post" action="{% url 'openmaps_login' %}">
+    {% csrf_token %}
+    <fieldset class="form_border">
+      <div>
+        <h1 class="form_title">Sign In:</h3>
+      </div>
+{% if form.errors and not form.non_field_errors %}
+      <div>
+        <div class="form_title" >
+          <p class="errornote">{% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+          </p>
+        </div>
+      </div>
+{% endif %}
+{% if form.non_field_errors %}
+      <div>
+        <div class="form_title" >
+{%   for error in form.non_field_errors %}
+          <p class="errornote">
+            {{ error }}
+          </p>
+{%   endfor %}
+        </div>
+      </div>
+{% endif %}
+      <div>
+        <label class="form_label">Username:<label>
+      </div>
+      <div class="input_size" >
+        <li class="form_input">{{ form.username }}</li>
+      </div>
+      <div class="input_size">
+        <label class="form_label">Password:<label>
+      </div>
+      <div class="input_size">
+        <li class"form_input">{{ form.password }}</li>
+      </div>
+      <div class="button_align">
+        <input class="form_button" type="submit" value="{% translate "Log in" %}">
+      </div>
+    </fieldset>
+  </form>
+</div>
 {% endblock body %}
