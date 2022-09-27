@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block body %}
 <div class="header_spacing">
 <div class="right_wrap">
@@ -7,12 +8,12 @@
 {% if request.user.is_authenticated %}
 <div class="right_wrap">
     <h3 class="mr2">Logged in as {{ request.user.email }} </h3>
-    <a class="login_button" href="{% url 'openmaps_logout' %}">Logout</a>
+    <a class="login_button" href="{% url 'openmaps_logout' %}">{% translate "Log out" %}</a>
 </div>
 {% else %}
 <div class="right_wrap">
     <h3 class="mr2">Please log in to continue</h3>
-    <a class="login_button" href="{% url 'openmaps_login' %}">Login</a>
+    <a class="login_button" href="{% url 'openmaps_login' %}">{% translate "Log in" %}</a>
 </div>
 {% endif %}
 </div>
