@@ -33,7 +33,7 @@
                     </a>
                     <div>
                         <p class="app_description">
-                            {{ app_link.description }}
+                            {{ app_link.description|default:app_link.text }}
                         </p>
                     </div>
                     <a class="app-button" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">Use {{ app_link.text}}</a>
