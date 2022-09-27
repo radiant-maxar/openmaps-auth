@@ -1,4 +1,5 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load i18n %}
 {% block body %}
 <div class="header_spacing">
   <div class="right_wrap">
@@ -11,12 +12,30 @@
 </div>
 <div>
   <form class="form_align" name="login" method="post" action="{% url 'openmaps_login' %}">
-    <table>
-      {% csrf_token %}
+    {% csrf_token %}
     <fieldset class="form_border">
       <div>
         <h1 class="form_title">Sign In:</h3>
       </div>
+{% if form.errors and not form.non_field_errors %}
+      <div>
+        <div class="form_title" >
+          <p class="errornote">{% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+          </p>
+        </div>
+      </div>
+{% endif %}
+{% if form.non_field_errors %}
+      <div>
+        <div class="form_title" >
+{%   for error in form.non_field_errors %}
+          <p class="errornote">
+            {{ error }}
+          </p>
+{%   endfor %}
+        </div>
+      </div>
+{% endif %}
       <div>
         <label class="form_label">Username:<label>
       </div>
@@ -30,13 +49,9 @@
         <li class"form_input">{{ form.password }}</li>
       </div>
       <div class="button_align">
-        <input class="form_button" type="reset">
-      </div>
-      <div class="button_align">
-        <input class="form_button" type="submit" value="Login">
+        <input class="form_button" type="submit" value="{% translate "Log in" %}">
       </div>
     </fieldset>
-    </table>
   </form>
 </div>
 {% endblock body %}
