@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script>
+  function addtext(e) {
+    document.querySelector("#default_title").innerHTML = e.getAttribute("data-name")
+    document.querySelector("#featured_application_description").innerHTML = e.getAttribute("data-description")
+  }
+  function removetext(e) {
+    document.querySelector("#featured_application_description").innerHTML = ""
+    document.querySelector("#default_title").innerHTML = document.querySelector("#default_title").getAttribute("data-name")
+  }
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <title>{% if request.user.is_authenticated %}{{ openmaps_auth.title }}{% else %}Log in to {{ openmaps_auth.title }}{% endif %}</title>
 <meta charset="UTF-8">
 <style>
@@ -19,7 +30,8 @@
     text-decoration: none;
   }
   article {
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    padding: 0.5em;
+    margin-bottom: 20px;
     border: solid;
     border-color: #585a5d;
     margin-top: 2rem;
@@ -30,9 +42,8 @@
     align-items: center;
     justify-content: center;
     background-color: #FFFFFF;
-  }
-  a:hover {
-    color: #FFFFFF;
+    width: 100%;
+    height: 100%;
   }
   button {
     float: right;
@@ -40,12 +51,6 @@
   h3 {
     float: right;
     margin-right: 2rem;
-  }
-  .logo {
-    display: block;
-    margin: 0 auto auto 0;
-    max-height: 300px;
-    max-width: 300px;
   }
   .header_spacing {
     width: 100%;
@@ -62,7 +67,7 @@
   }
   a.app-button {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1;
     text-transform: none;
@@ -82,7 +87,7 @@
   }
   .app-button {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     line-height: 1;
     text-transform: none;
@@ -133,35 +138,48 @@
     align-items: center;
     justify-content: center;
   }
-  .image_holder:hover{
+  .container_spacing:hover {
     transform: scale(1.04);
+  }
+  article:hover {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
   }
   .app_card {
     text-align: center;
     height: 200px;
-    padding-bottom: 2rem;
     background-color: #FFFFFF;
     color: #212529;
     bottom:150px;
     z-index: 1;
     width: 100%;
+    height: 100%;
   }
   .app_description {
+    display: flex;
     color: #6c757d;
-    height: 80px;
-    padding-top: 3rem;
     padding-left: 1em;
     padding-right: 1em;
     font-style: italic;
+    height: 100px;
   }
   .section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 10px;
+    align-items: center;
+    justify-content: center;
     margin-left: 1rem;
     margin-right: 1rem;
     margin-bottom: 1rem;
+  }
+  .center_section {
     display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    background-color: #f5f5f5;
+    align-items: center;
+    justify-content: center;
+    overflow: scroll;
+    position: relative;
   }
   .container_spacing {
     margin: 0.5em;
@@ -184,21 +202,13 @@
     align-self: center;
   }
   .size {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
     vertical-align: middle;
     border-style: none;
     width: inherit;
     height: auto;
     align-self: center;
     /* height: 200px !important; */
-  }
-  .text_color {
-    color: #fcaf17;
-    display: flex;
-    float: left;
-    padding-bottom: 2rem;
-    vertical-align: top;
-    text-decoration: none;
   }
   .app_text {
     font-size: 15px;
@@ -213,7 +223,13 @@
     text-shadow: 2px 2px 4px #FFFFFF;
     z-index: 5;
     margin-bottom: -2rem;
-    background-color: #f5f5f5;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+  .hover_text {
+    padding-bottom: 0rem;
+    color: #6c757d;
+    text-transform: lowercase;
   }
 
   .login_request_text {
@@ -400,13 +416,6 @@
     align-items: center;
     justify-content: center;
   }
-  .bg-dark {
-    background-color: #4C4B48;
-    color: #FFFFFF;
-  }
-  .text-middle {
-    vertical-align: middle;
-  }
   .mr2 {
     color: #212529;
     padding: 0.75rem 1.5rem;
@@ -461,12 +470,6 @@
     font-weight: 400;
     line-height: 1.5;
   }
-  tbody {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50%;
-  }
   .input_size {
     width: 100%;
   }
@@ -497,17 +500,6 @@
   .container * {
     box-sizing: border-box;
   }
-  li {
-    padding-left: 2rem;
-    padding-right: 2rem;
-    list-style-type: none;
-  }
-  .child {
-    flex: 1 0 21%;
-    margin: 5px;
-    height: 100px;
-    background-color: blue;
-  }
   hr {
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -515,14 +507,13 @@
     border-top: 1px solid rgba(0,0,0,0.1);
   }
   .underline {
-    font-size: 30px;
+    font-size: 17px;
     font-weight: 600;
     color: #212529;
     justify-content: flex-start;
     text-decoration: underline;
     text-decoration-style: single;
     text-decoration-color: #fcaf17;
-    padding-bottom: 1rem;
     display: flex;
   }
   a.image_holder.app_img.img_container.size.underline:hover {
@@ -531,6 +522,17 @@
   .maxar_logo {
     color: #fcaf17;
     font-size: 20px;
+  }
+  .material-symbols-outlined {
+    color: #212529;
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+    font-size: 80px;
+    text-shadow:2px 4px 4px #fcaf17,
+    0px -5px 10px rgba(255,255,255,0.15);
   }
 </style>
 </head>
