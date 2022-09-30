@@ -173,19 +173,21 @@
     margin-left: 1rem;
     margin-right: 1rem;
     margin-bottom: 1rem;
+    
   }
   .center_section {
     display: flex;
     align-items: center;
-    justify-content: center;
-    overflow: scroll;
     position: relative;
+    justify-content: center;
+    flex-direction: column;
   }
   .container_spacing {
     margin: 0.5em;
     flex-grow: 1;
     flex-basis: 32%;
     justify-content: center;
+    max-height: max-content;
   }
   .app_link {
     width: 100%;
@@ -225,6 +227,7 @@
     margin-bottom: -2rem;
     flex-wrap: wrap;
     flex-direction: column;
+    height: 150px;
   }
   .hover_text {
     padding-bottom: 0rem;
@@ -424,16 +427,17 @@
     width: 25%;
     align-items: center;
   }
-  footer {
-    position: fixed;
+  .footer_container {
+    width: 100%;
+    position: sticky;
     bottom: 1px;
     left: 0px;
     right: 0px;
     margin-bottom: 0px;
-  }
-  .footer {
-    padding-left: 2rem;
-    line-height: 1rem;
+    left: 0px; 
+    width: 100%;
+    z-index: 5;
+    background-color: #FFFFFF;
   }
   .form_align {
     display: flex;
@@ -465,7 +469,6 @@
   }
   p {
     margin-top: 0;
-    margin-bottom: 1rem;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
@@ -505,7 +508,7 @@
     margin-bottom: 1rem;
     border: 0;
     border-top: 1px solid rgba(0,0,0,0.1);
-  }
+   }
   .underline {
     font-size: 17px;
     font-weight: 600;
@@ -544,10 +547,8 @@
 <body>
 {% block body %}
 {% endblock body %}
+<div class="footer_container">
+  <p> Copyright © 2022 Maxar Technologies, Inc.</p>
+</div>
 </body>
-
-<footer class="footer">
-  <hr/>
-  <p> © Copyright Maxar</p>
-</footer>
 </html>
