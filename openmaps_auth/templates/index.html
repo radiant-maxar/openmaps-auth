@@ -33,9 +33,9 @@
             <article data-name="{{app_link.text}}" data-description="{{app_link.description}}" onmouseover=addtext(this) onmouseout=removetext()>
                 <div class="app_card">
                     <a class="image_holder app_img img_container size" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">
-                        <i class="material-symbols-outlined">
-                            {{app_link.icon}}
-                        </i>
+                        <svg class="icon__{{app_link.text}} show-icon" viewBox="-25 -25 100 100">
+                            <use class="material-symbols-outline" href="#{{app_link.text}}"></use>
+                        </svg>
                     </a>
                     <a class="app_img img_container size underline">
                         {{ app_link.text }}
