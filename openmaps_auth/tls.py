@@ -15,6 +15,7 @@ except ImportError:
     raise ImproperlyConfigured("cryptography package is required")
 
 from .cookies import set_auth_cookies
+from .views import get_index_url
 
 
 logger = logging.getLogger(__name__)
@@ -99,7 +100,7 @@ class TLSClientMiddleware:
         if request.path_info == reverse("openmaps_login"):
             logger.info(f"tls client login request: {user}")
             login(request, user)
-            response = HttpResponseRedirect(reverse("index"))
+            response = HttpResponseRedirect(get_index_url())
             return set_auth_cookies(request, response)
         elif request.path_info == reverse("valid"):
             logger.info(f"tls client valid request: {user}")

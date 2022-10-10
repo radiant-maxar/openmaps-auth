@@ -18,6 +18,13 @@ from .cookies import set_auth_cookies
 logger = logging.getLogger(__name__)
 
 
+def get_index_url():
+    if settings.INDEX_URL.startswith("/"):
+        return settings.INDEX_URL
+    else:
+        return reverse("index")
+
+
 def index(request):
     return render(request, "index.html", {})
 
@@ -65,7 +72,7 @@ if settings.OPENMAPS_AUTH_BACKEND:
 else:
 
     def callback(request):
-        response = HttpResponseRedirect(reverse("index"))
+        response = HttpResponseRedirect(get_index_url())
         return set_auth_cookies(request, response)
 
     login = LoginView.as_view(template_name="login.html")

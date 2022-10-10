@@ -35,7 +35,7 @@ location / {
 
 ## Configuration Reference
 
-All listed setting may be set via an environment variable of the same name, or by using a file with the setting's contents and appending `_FILE` to the setting name.
+All listed setting may be set via an environment variable of the same name, or by using a file with the setting's contents and appending [`_FILE` to the setting name](https://django-environ.readthedocs.io/en/latest/tips.html#docker-style-file-based-variables).  Any file defaults with `/path/to/openmaps-auth` is the location where you've cloned this repository.
 
 ### Application Settings
 
@@ -65,6 +65,10 @@ The following must also be configured when setting a backend:
 * `OPENMAPS_AUTH_SECRET`
 * `OPENMAPS_AUTH_REDIRECT_URI`
 * `OPENMAPS_AUTH_OIDC_ENDPOINT`: when using Okta or for a Login.gov development endpoint.
+
+#### `OPENMAPS_AUTH_CALLBACK_URL`
+
+The callback URL used to set [`LOGIN_REDIRECT_URL`](https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-LOGIN_REDIRECT_URL); defaults to `callback`.
 
 #### `OPENMAPS_AUTH_CLIENT_TLS`
 
@@ -99,6 +103,10 @@ HTTP header for client certifcate in PEM format, and URL encoded like Nginx's [`
 #### `OPENMAPS_AUTH_CLIENT_TLS_VERIFY_HEADER`
 
 HTTP header for client certifcate verification status like Nginx's [`$ssl_client_verify`](https://nginx.org/en/docs/http/ngx_http_ssl_module.html#var_ssl_client_verify) variable; defaults to `X-TLS-Client-Verify`.
+
+#### `OPENMAPS_AUTH_INDEX_URL`
+
+The index URL to used to set [`LOGOUT_REDIRECT_URL`](https://docs.djangoproject.com/en/4.1/ref/settings/#logout-redirect-url) and `SOCIAL_AUTH_LOGIN_REDIRECT_URL`; defaults to `index`.
 
 #### `OPENMAPS_AUTH_KEY`
 
@@ -160,7 +168,7 @@ Defaults to `None`.
 
 #### `CACHE_BACKEND`
 
-Defaults to `django.core.cache.backends.memcached.PyMemcacheCache`; only when `CACHE_URL` is defined.
+Defaults to `django.core.cache.backends.redis.RedisCache`; only valid when the `CACHE_URL` setting is provided.
 
 #### `CSRF_COOKIE_NAME`
 
@@ -222,9 +230,13 @@ When `CACHE_URL` is set, defaults to `django.contrib.sessions.backends.cache`; `
 
 Defaults to `1`.
 
+#### `STATIC_ROOT`
+
+Defaults to `/path/to/openmaps-auth/static`.
+
 #### `STATIC_URL`
 
-Defaults to `static/`.
+Defaults to `/static/`.
 
 #### `TIME_ZONE`
 

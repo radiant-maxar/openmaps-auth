@@ -4,9 +4,16 @@
 # Python
 build/
 dist/
+.bash_history
+.cache/
+.ipython/
+.python_history
 *.egg-info
 *.py[co]
 venv/
 
 # SQLite3 database files:
 *.sqlite3
+
+# staticfiles
+static/
