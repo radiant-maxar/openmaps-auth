@@ -5,7 +5,14 @@ import environ
 env = environ.FileAwareEnv()
 
 BASE_DIR = Path(__file__).parent.parent.parent
+
 BASE_PATH = env.str("OPENMAPS_AUTH_BASE_PATH", default="")
+if len(BASE_PATH):
+    if not BASE_PATH.startswith("/"):
+        raise ImproperlyConfigured("Customized base paths must start with a /.")
+    BASE_URL_PATTERN = f"{BASE_PATH}/".lstrip("/")
+else:
+    BASE_URL_PATTERN = ""
 
 OPENMAPS_AUTH_BACKEND = env.str("OPENMAPS_AUTH_BACKEND", default=None)
 if OPENMAPS_AUTH_BACKEND:
@@ -39,6 +46,7 @@ SITE_ID = env.int("SITE_ID", default=1)
 
 # Application definition
 INSTALLED_APPS = (
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -50,6 +58,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -94,9 +103,7 @@ DATABASES = {
 # Cache
 CACHE_URL = env.cache_url(
     default=None,
-    backend=env.str(
-        "CACHE_BACKEND", "django.core.cache.backends.memcached.PyMemcacheCache"
-    ),
+    backend=env.str("CACHE_BACKEND", "django.core.cache.backends.redis.RedisCache"),
 )
 if CACHE_URL:
     CACHES = {"default": CACHE_URL}
@@ -160,9 +167,11 @@ elif OPENMAPS_AUTH_BACKEND == "openstreetmap":
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
 # Ensure proper redirects when using email or social login.
-LOGIN_REDIRECT_URL = "callback"
-LOGOUT_REDIRECT_URL = "index"
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = "index"
+CALLBACK_URL = env.str("OPENMAPS_AUTH_CALLBACK_URL", default="callback")
+INDEX_URL = env.str("OPENMAPS_AUTH_INDEX_URL", default="index")
+LOGIN_REDIRECT_URL = CALLBACK_URL
+LOGOUT_REDIRECT_URL = INDEX_URL
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = INDEX_URL
 
 # When using social or tls login, restrict access based on email or domain
 # whitelists if they are defined.
@@ -211,4 +220,5 @@ USE_I18N = env.bool("USE_I18N", default=True)
 USE_TZ = env.bool("USE_TZ", default=True)
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = env.str("STATIC_URL", default=f"{BASE_PATH}static/")
+STATIC_ROOT = env.str("STATIC_ROOT", default=BASE_DIR / "static")
+STATIC_URL = env.str("STATIC_URL", default=f"{BASE_PATH}/static/")
