@@ -30,13 +30,13 @@
 <div class="center_section">
 <div class="section">
     {% for app_link in openmaps_auth.app_links %}
-    {% with "../static/"|add:app_link.text|cut:" "|add:".svg" as template %}
+    {% with  "img/"|add:app_link.text|cut:" "|add:".svg" as svg_src %}
         <div class="container_spacing">
-            <article data-name="{{app_link.text}}" data-description="{{app_link.description}}" onmouseover=addtext(this) onmouseout=removetext()>
+            <article data-name="{{ app_link.text }}" data-description="{{ app_link.description }}" onmouseover=addtext(this) onmouseout=removetext()>
                 <div class="app_card">
                     <a class="image_holder app_img img_container size" href="{{ app_link.link }}" target="{{ app_link.target|default:'_blank' }}">
-                        <img src="{{template}}" class="show-icon" viewBox="-25 -25 100 100">
-                            <use class="material-symbols-outline" href="#{{app_link.text}}"></use>
+                        <img src="{% static svg_src %}" class="show-icon" viewBox="-25 -25 100 100">
+                            <use class="material-symbols-outline" href="#{{ app_link.text }}"></use>
                         </img>
                     </a>
                     <a class="app_img img_container size underline">
