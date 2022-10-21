@@ -367,10 +367,6 @@ button.logout_button:hover {
   font-weight: bold;
   font-size: 20px;
 }
-.form_input {
-  padding-top: 3rem;
-  width: 100%;
-}
 .form_button {
   text-align: center;
   margin-top: 1rem;
@@ -465,7 +461,7 @@ input[type="text"] {
 }
 input[type="password"] {
   height: 3rem;
-  width: 100%;
+  width: 85%;
   font-size: 1.25rem;
   background-color: #f2f9ff;
   border: 1px solid #cedced;
