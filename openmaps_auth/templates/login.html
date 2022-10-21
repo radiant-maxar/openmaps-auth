@@ -7,7 +7,7 @@
   </div>
   <div class="right_wrap">
     <h3 class="mr2">Please login to continue</h3>
-    <p class"mr2"></p>
+    <p class="mr2"></p>
   </div>
 </div>
 <div>
@@ -15,7 +15,7 @@
     {% csrf_token %}
     <fieldset class="form_border">
       <div>
-        <h1 class="form_title">Sign In:</h3>
+        <h1 class="form_title">Sign In:</h1>
       </div>
 {% if form.errors and not form.non_field_errors %}
       <div>
@@ -36,17 +36,17 @@
         </div>
       </div>
 {% endif %}
-      <div>
-        <label class="form_label">Username:<label>
+      <div class="input_size">
+        <label class="form_label">Username:</label>
       </div>
-      <div class="input_size" >
+      <div class="input_size">
         <li class="form_input">{{ form.username }}</li>
       </div>
       <div class="input_size">
-        <label class="form_label">Password:<label>
+        <label class="form_label">Password:</label>
       </div>
       <div class="input_size">
-        <li class"form_input">{{ form.password }}</li>
+        <li class="form_input">{{ form.password }}</li>
       </div>
       <div class="button_align">
         <input class="form_button" type="submit" value="{% translate "Log in" %}">

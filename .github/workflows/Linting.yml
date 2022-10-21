@@ -7,5 +7,17 @@ jobs:
   Black:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: psf/black@stable
+
+  Prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Prettier
+        run: npm install prettier
+      - name: Run Prettier
+        run: npx prettier .
+      - name: Run Prettier (check)
+        continue-on-error: true
+        run: npx prettier --check .
