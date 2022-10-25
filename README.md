@@ -1,6 +1,6 @@
 # OpenMaps Authentication API
 
-This application enables authentication integrations for Maxar's OpenMapping environments. Specifically, this provides a simple API for mediating access to private web applications via external identity providers.
+This application enables authentication integrations for Maxar's OpenMaps environments. Specifically, this provides a simple API for mediating access to private web applications via external identity providers.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ location = /callback {
     proxy_pass http://auth:8000;
 }
 
-location = /v0/auth/valid {
+location = /valid {
     internal;
     proxy_pass              http://auth:8000;
     proxy_pass_request_body off;
@@ -29,7 +29,7 @@ location = /v0/auth/valid {
 
 location / {
     proxy_pass   http://protected-app;
-    auth_request /v0/auth/valid;
+    auth_request /valid;
 }
 ```
 
@@ -68,7 +68,7 @@ The following must also be configured when setting a backend:
 
 #### `OPENMAPS_AUTH_CALLBACK_URL`
 
-The callback URL used to set [`LOGIN_REDIRECT_URL`](https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-LOGIN_REDIRECT_URL); defaults to `callback`.
+The callback URL used to set [`LOGIN_REDIRECT_URL`](https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-LOGIN_REDIRECT_URL); defaults to `callba
 
 #### `OPENMAPS_AUTH_CLIENT_TLS`
 
@@ -80,7 +80,7 @@ ssl_verify_client optional;
 
 ...
 
-location = /v0/auth/valid {
+location = /valid {
     internal;
     proxy_pass              http://auth:8000;
     proxy_pass_request_body off;
@@ -89,7 +89,7 @@ location = /v0/auth/valid {
     proxy_set_header        X-TLS-Client-Verify $ssl_client_verify;
 }
 
-location = /v0/auth/login {
+location = /login {
     proxy_pass       http://auth:8000;
     proxy_set_header X-TLS-Client-Cert $ssl_client_escaped_cert;
     proxy_set_header X-TLS-Client-Verify $ssl_client_verify;
@@ -158,7 +158,7 @@ Cookie used by OpenStreetMap to store its session, defaults to [`_osm_session`](
 
 #### `OSM_USER_PASSWORD`
 
-Password to authenticate the user to OpenStreetMap, defaults to `changemenow`.
+Password to authenticate the user to OpenStreetMap, defaults to `None`.
 
 ### Django Settings
 
