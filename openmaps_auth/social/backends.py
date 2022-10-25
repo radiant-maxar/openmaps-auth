@@ -142,6 +142,7 @@ class OpenStreetMapMixin:
 
 class OpenStreetMapOAuth(OpenStreetMapMixin, BaseOpenStreetMapOAuth):
     """OpenStreetMap OAuth1 authentication backend"""
+
     ACCESS_TOKEN_URL = settings.OSM_OAUTH1_ACCESS_TOKEN_URL
     AUTHORIZATION_URL = settings.OSM_OAUTH1_AUTHORIZATION_URL
     REQUEST_TOKEN_URL = settings.OSM_OAUTH1_REQUEST_TOKEN_URL
@@ -155,6 +156,7 @@ class OpenStreetMapOAuth(OpenStreetMapMixin, BaseOpenStreetMapOAuth):
 
 class OpenStreetMapOAuth2(OpenStreetMapMixin, BaseOAuth2):
     """OpenStreetMap OAuth2 authentication backend"""
+
     name = "openstreetmap-oauth2"
     ACCESS_TOKEN_METHOD = "POST"
     ACCESS_TOKEN_URL = settings.OSM_OAUTH2_ACCESS_TOKEN_URL

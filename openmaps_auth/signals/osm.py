@@ -25,7 +25,9 @@ def osm_login(sender, **kwargs):
             "authenticity_token": authenticity_token,
             "username": user.email,
         }
-        response = requests.post(settings.OSM_NEW_USER_URL, cookies=ol.cookies, data=new_user_data)
+        response = requests.post(
+            settings.OSM_NEW_USER_URL, cookies=ol.cookies, data=new_user_data
+        )
         if response.status_code == 204:
             logger.info(f"created new osm user: {user}")
             ol = osm.login(user)

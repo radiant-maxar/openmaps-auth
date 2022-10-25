@@ -34,14 +34,26 @@ OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
 OSM_AUTH_URL = env.str("OSM_AUTH_URL", default=OSM_BASE_URL)
 OSM_LOGIN_URL = env.str("OSM_LOGIN_URL", default=f"{OSM_BASE_URL}/login")
 OSM_NEW_USER_URL = env.str("OSM_NEW_USER_URL", default=f"{OSM_BASE_URL}/user/new")
-OSM_OAUTH1_ACCESS_TOKEN_URL = env.str("OSM_OAUTH1_ACCESS_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth/access_token")
-OSM_OAUTH1_AUTHORIZATION_URL = env.str("OSM_OAUTH1_AUTHORIZATION_URL", default=f"{OSM_AUTH_URL}/oauth/authorize")
-OSM_OAUTH1_REQUEST_TOKEN_URL = env.str("OSM_OAUTH1_REQUEST_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth/request_token")
-OSM_OAUTH2_ACCESS_TOKEN_URL = env.str("OSM_OAUTH2_ACCESS_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth2/token")
-OSM_OAUTH2_AUTHORIZATION_URL = env.str("OSM_OAUTH2_AUTHORIZATION_URL", default=f"{OSM_AUTH_URL}/oauth2/authorize")
+OSM_OAUTH1_ACCESS_TOKEN_URL = env.str(
+    "OSM_OAUTH1_ACCESS_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth/access_token"
+)
+OSM_OAUTH1_AUTHORIZATION_URL = env.str(
+    "OSM_OAUTH1_AUTHORIZATION_URL", default=f"{OSM_AUTH_URL}/oauth/authorize"
+)
+OSM_OAUTH1_REQUEST_TOKEN_URL = env.str(
+    "OSM_OAUTH1_REQUEST_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth/request_token"
+)
+OSM_OAUTH2_ACCESS_TOKEN_URL = env.str(
+    "OSM_OAUTH2_ACCESS_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth2/token"
+)
+OSM_OAUTH2_AUTHORIZATION_URL = env.str(
+    "OSM_OAUTH2_AUTHORIZATION_URL", default=f"{OSM_AUTH_URL}/oauth2/authorize"
+)
 OSM_OAUTH2_DEFAULT_SCOPE = env.list("OSM_OAUTH2_DEFAULT_SCOPE", default=["read_prefs"])
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
-OSM_USER_DETAILS_URL = env.str("OSM_USER_DETAILS_URL", default=f"{OSM_AUTH_URL}/api/0.6/user/details")
+OSM_USER_DETAILS_URL = env.str(
+    "OSM_USER_DETAILS_URL", default=f"{OSM_AUTH_URL}/api/0.6/user/details"
+)
 OSM_USER_EMAIL_DOMAIN = env.str("OSM_USER_EMAIL_DOMAIN", default="openstreetmap.arpa")
 OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
 
@@ -130,10 +142,14 @@ SESSION_COOKIE_PATH = env.str("SESSION_COOKIE_PATH", default="/")
 SESSION_COOKIE_SAMESITE = env.str("SESSION_COOKIE_SAMESITE", default="Lax")
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=False)
 SESSION_ENGINE = env.str("SESSION_ENGINE", default=DEFAULT_SESSION_ENGINE)
-SESSION_EXPIRE_AT_BROWSER_CLOSE = env.bool("SESSION_EXPIRE_AT_BROWSER_CLOSE", default=False)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = env.bool(
+    "SESSION_EXPIRE_AT_BROWSER_CLOSE", default=False
+)
 SESSION_FILE_PATH = env.str("SESSION_FILE_PATH", default=None)
 SESSION_SAVE_EVERY_REQUEST = env.bool("SESSION_SAVE_EVERY_REQUEST", default=False)
-SESSION_SERIALIZER = env.str("SESSION_SERIALIZER", default="django.contrib.sessions.serializers.JSONSerializer")
+SESSION_SERIALIZER = env.str(
+    "SESSION_SERIALIZER", default="django.contrib.sessions.serializers.JSONSerializer"
+)
 
 # CSRF
 CSRF_COOKIE_AGE = env.int("CSRF_COOKIE_AGE", default=SESSION_COOKIE_AGE)

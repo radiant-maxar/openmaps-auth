@@ -68,13 +68,14 @@ class TLSClientBackend(ModelBackend):
         email = email_from_tls_request(request)
         if not tls_email_allowed(email):
             return None
-
         UserModel = get_user_model()
         try:
-            user = UserModel.objects.get(UserModel.USERNAME_FIELD=email)
+            user = UserModel.objects.get(**{UserModel.USERNAME_FIELD: email})
         except UserModel.DoesNotExist:
             logger.info(f"creating user for {email}")
-            user = UserModel(UserModel.USERNAME_FIELD=email, UserModel.EMAIL_FIELD=email)
+            user = UserModel(
+                **{UserModel.USERNAME_FIELD: email, UserModel.EMAIL_FIELD: email}
+            )
             user.save()
 
         logger.info(f"tls client authenticated: {email}")
