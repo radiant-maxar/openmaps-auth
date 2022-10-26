@@ -68,7 +68,7 @@ The following must also be configured when setting a backend:
 
 #### `OPENMAPS_AUTH_CALLBACK_URL`
 
-The callback URL used to set [`LOGIN_REDIRECT_URL`](https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-LOGIN_REDIRECT_URL); defaults to `callba
+The callback URL used to set [`LOGIN_REDIRECT_URL`](https://docs.djangoproject.com/en/4.1/ref/settings/#std-setting-LOGIN_REDIRECT_URL); defaults to `callback`.
 
 #### `OPENMAPS_AUTH_CLIENT_TLS`
 
