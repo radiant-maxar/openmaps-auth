@@ -16,7 +16,6 @@ else:
 
 OPENMAPS_AUTH_BACKEND = env.str("OPENMAPS_AUTH_BACKEND", default=None)
 if OPENMAPS_AUTH_BACKEND:
-    OPENMAPS_AUTH_REDIRECT_URI = env.str("OPENMAPS_AUTH_REDIRECT_URI")
     OPENMAPS_AUTH_SECRET = env.str("OPENMAPS_AUTH_SECRET", default="")
 OPENMAPS_AUTH_TITLE = env.str("OPENMAPS_AUTH_TITLE", default="Maxar OpenMaps")
 OPENMAPS_AUTH_APP_LINKS = env.json(
@@ -33,7 +32,29 @@ OPENMAPS_AUTH_OSM_SESSION = env.bool("OPENMAPS_AUTH_OSM_SESSION", default=False)
 
 OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
 OSM_AUTH_URL = env.str("OSM_AUTH_URL", default=OSM_BASE_URL)
+OSM_LOGIN_URL = env.str("OSM_LOGIN_URL", default=f"{OSM_BASE_URL}/login")
+OSM_NEW_USER_URL = env.str("OSM_NEW_USER_URL", default=f"{OSM_BASE_URL}/user/new")
+OSM_OAUTH1_ACCESS_TOKEN_URL = env.str(
+    "OSM_OAUTH1_ACCESS_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth/access_token"
+)
+OSM_OAUTH1_AUTHORIZATION_URL = env.str(
+    "OSM_OAUTH1_AUTHORIZATION_URL", default=f"{OSM_AUTH_URL}/oauth/authorize"
+)
+OSM_OAUTH1_REQUEST_TOKEN_URL = env.str(
+    "OSM_OAUTH1_REQUEST_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth/request_token"
+)
+OSM_OAUTH2_ACCESS_TOKEN_URL = env.str(
+    "OSM_OAUTH2_ACCESS_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth2/token"
+)
+OSM_OAUTH2_AUTHORIZATION_URL = env.str(
+    "OSM_OAUTH2_AUTHORIZATION_URL", default=f"{OSM_AUTH_URL}/oauth2/authorize"
+)
+OSM_OAUTH2_DEFAULT_SCOPE = env.list("OSM_OAUTH2_DEFAULT_SCOPE", default=["read_prefs"])
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
+OSM_USER_DETAILS_URL = env.str(
+    "OSM_USER_DETAILS_URL", default=f"{OSM_AUTH_URL}/api/0.6/user/details"
+)
+OSM_USER_EMAIL_DOMAIN = env.str("OSM_USER_EMAIL_DOMAIN", default="openstreetmap.arpa")
 OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
@@ -62,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -114,14 +136,31 @@ else:
 # Sessions
 SESSION_COOKIE_AGE = env.int("SESSION_COOKIE_AGE", default=1209600)
 SESSION_COOKIE_DOMAIN = env.str("SESSION_COOKIE_DOMAIN", default=None)
+SESSION_COOKIE_HTTPONLY = env.bool("SESSION_COOKIE_HTTPONLY", default=True)
 SESSION_COOKIE_NAME = env.str("SESSION_COOKIE_NAME", default="openmapsid")
+SESSION_COOKIE_PATH = env.str("SESSION_COOKIE_PATH", default="/")
+SESSION_COOKIE_SAMESITE = env.str("SESSION_COOKIE_SAMESITE", default="Lax")
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=False)
 SESSION_ENGINE = env.str("SESSION_ENGINE", default=DEFAULT_SESSION_ENGINE)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = env.bool(
+    "SESSION_EXPIRE_AT_BROWSER_CLOSE", default=False
+)
+SESSION_FILE_PATH = env.str("SESSION_FILE_PATH", default=None)
+SESSION_SAVE_EVERY_REQUEST = env.bool("SESSION_SAVE_EVERY_REQUEST", default=False)
+SESSION_SERIALIZER = env.str(
+    "SESSION_SERIALIZER", default="django.contrib.sessions.serializers.JSONSerializer"
+)
 
 # CSRF
+CSRF_COOKIE_AGE = env.int("CSRF_COOKIE_AGE", default=SESSION_COOKIE_AGE)
+CSRF_COOKIE_DOMAIN = env.str("CSRF_COOKIE_DOMAIN", default=SESSION_COOKIE_DOMAIN)
+CSRF_COOKIE_HTTPONLY = env.bool("CSRF_COOKIE_HTTPONLY", default=False)
 CSRF_COOKIE_NAME = env.str("CSRF_COOKIE_NAME", default="openmapscsrf")
+CSRF_COOKIE_PATH = env.str("CSRF_COOKIE_PATH", default=SESSION_COOKIE_PATH)
+CSRF_COOKIE_SAMESITE = env.str("CSRF_COOKIE_SAMESITE", default=SESSION_COOKIE_SAMESITE)
 CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=SESSION_COOKIE_SECURE)
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+CSRF_USE_SESSIONS = env.bool("CSRF_USE_SESSIONS", default=False)
 
 # Authentication
 OPENMAPS_AUTH_KEY = env.str("OPENMAPS_AUTH_KEY", default="")
@@ -137,32 +176,36 @@ if OPENMAPS_AUTH_CLIENT_TLS:
 # Set up social_auth variables when backend is set.
 if OPENMAPS_AUTH_BACKEND == "login-gov":
     AUTHENTICATION_BACKENDS = (
-        "openmaps_auth.backends.LoginGovOpenIdConnect",
+        "openmaps_auth.social.backends.LoginGovOpenIdConnect",
     ) + AUTHENTICATION_BACKENDS
     SOCIAL_AUTH_LOGIN_GOV_KEY = OPENMAPS_AUTH_KEY
     SOCIAL_AUTH_LOGIN_GOV_SECRET = OPENMAPS_AUTH_SECRET
-    SOCIAL_AUTH_LOGIN_GOV_REDIRECT_URI = OPENMAPS_AUTH_REDIRECT_URI
     if OPENMAPS_AUTH_OIDC_ENDPOINT:
         SOCIAL_AUTH_LOGIN_GOV_OIDC_ENDPOINT = OPENMAPS_AUTH_OIDC_ENDPOINT
 elif OPENMAPS_AUTH_BACKEND == "okta-openidconnect":
     AUTHENTICATION_BACKENDS = (
-        "openmaps_auth.backends.OktaOpenIdConnect",
+        "openmaps_auth.social.backends.OktaOpenIdConnect",
     ) + AUTHENTICATION_BACKENDS
     SOCIAL_AUTH_OKTA_OPENIDCONNECT_KEY = OPENMAPS_AUTH_KEY
     SOCIAL_AUTH_OKTA_OPENIDCONNECT_SECRET = OPENMAPS_AUTH_SECRET
-    SOCIAL_AUTH_OKTA_OPENIDCONNECT_REDIRECT_URI = OPENMAPS_AUTH_REDIRECT_URI
     if OPENMAPS_AUTH_OIDC_ENDPOINT:
         SOCIAL_AUTH_OKTA_OPENIDCONNECT_API_URL = OPENMAPS_AUTH_OIDC_ENDPOINT
     else:
         raise ImproperlyConfigured("Must provide endpoint for Okta")
 elif OPENMAPS_AUTH_BACKEND == "openstreetmap":
     AUTHENTICATION_BACKENDS = (
-        "openmaps_auth.backends.OpenStreetMapOAuth",
+        "openmaps_auth.social.backends.OpenStreetMapOAuth",
     ) + AUTHENTICATION_BACKENDS
     SOCIAL_AUTH_OPENSTREETMAP_KEY = OPENMAPS_AUTH_KEY
     SOCIAL_AUTH_OPENSTREETMAP_SECRET = OPENMAPS_AUTH_SECRET
-    SOCIAL_AUTH_OPENSTREETMAP_REDIRECT_URI = OPENMAPS_AUTH_REDIRECT_URI
+elif OPENMAPS_AUTH_BACKEND == "openstreetmap-oauth2":
+    AUTHENTICATION_BACKENDS = (
+        "openmaps_auth.social.backends.OpenStreetMapOAuth2",
+    ) + AUTHENTICATION_BACKENDS
+    SOCIAL_AUTH_OPENSTREETMAP_OAUTH2_KEY = OPENMAPS_AUTH_KEY
+    SOCIAL_AUTH_OPENSTREETMAP_OAUTH2_SECRET = OPENMAPS_AUTH_SECRET
 
+SOCIAL_AUTH_STRATEGY = "openmaps_auth.social.strategy.OpenMapsStrategy"
 # Username is email address.
 SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 
@@ -213,12 +256,18 @@ LOGGING = {
     },
 }
 
+# Set when running behind a proxy.
+USE_X_FORWARDED_HOST = env.bool("USE_X_FORWARDED_HOST", default=False)
+USE_X_FORWARDED_PORT = env.bool("USE_X_FORWARDED_PORT", default=False)
+SECURE_PROXY_SSL_HEADER = env.list("SECURE_PROXY_SSL_HEADER", default=None)
+
 # Internationalization
 LANGUAGE_CODE = env.str("LANGUAGE_CODE", default="en-us")
 TIME_ZONE = env.str("TIME_ZONE", default="UTC")
 USE_I18N = env.bool("USE_I18N", default=True)
+USE_L10N = env.bool("USE_L10N", default=True)
 USE_TZ = env.bool("USE_TZ", default=True)
 
 # Static files (CSS, JavaScript, Images)
 STATIC_ROOT = env.str("STATIC_ROOT", default=BASE_DIR / "static")
-STATIC_URL = env.str("STATIC_URL", default=f"{BASE_PATH}/v0/static/")
+STATIC_URL = env.str("STATIC_URL", default=f"{BASE_PATH}/static/")

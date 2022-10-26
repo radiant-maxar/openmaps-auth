@@ -1,6 +1,6 @@
 # OpenMaps Authentication API
 
-This application enables authentication integrations for Maxar's OpenMapping environments. Specifically, this provides a simple API for mediating access to private web applications via external identity providers.
+This application enables authentication integrations for Maxar's OpenMaps environments. Specifically, this provides a simple API for mediating access to private web applications via external identity providers.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ location = /callback {
     proxy_pass http://auth:8000;
 }
 
-location = /v0/auth/valid {
+location = /valid {
     internal;
     proxy_pass              http://auth:8000;
     proxy_pass_request_body off;
@@ -29,7 +29,7 @@ location = /v0/auth/valid {
 
 location / {
     proxy_pass   http://protected-app;
-    auth_request /v0/auth/valid;
+    auth_request /valid;
 }
 ```
 
@@ -58,12 +58,12 @@ Authentication backend to use, defaults to `None`.  Set this to the desired exte
 * `login-gov`
 * `okta-openidconnect`
 * `openstreetmap`
+* `openstreetmap-oauth2`
 
 The following must also be configured when setting a backend:
 
 * `OPENMAPS_AUTH_KEY`
 * `OPENMAPS_AUTH_SECRET`
-* `OPENMAPS_AUTH_REDIRECT_URI`
 * `OPENMAPS_AUTH_OIDC_ENDPOINT`: when using Okta or for a Login.gov development endpoint.
 
 #### `OPENMAPS_AUTH_CALLBACK_URL`
@@ -80,7 +80,7 @@ ssl_verify_client optional;
 
 ...
 
-location = /v0/auth/valid {
+location = /valid {
     internal;
     proxy_pass              http://auth:8000;
     proxy_pass_request_body off;
@@ -89,7 +89,7 @@ location = /v0/auth/valid {
     proxy_set_header        X-TLS-Client-Verify $ssl_client_verify;
 }
 
-location = /v0/auth/login {
+location = /login {
     proxy_pass       http://auth:8000;
     proxy_set_header X-TLS-Client-Cert $ssl_client_escaped_cert;
     proxy_set_header X-TLS-Client-Verify $ssl_client_verify;
@@ -120,10 +120,6 @@ The logging level for this application, defaults to `INFO`.
 
 Set this to change OIDC endpoint URL from the default.
 
-#### `OPENMAPS_AUTH_REDIRECT_URI`
-
-The redirect URI for use by the identity provider, e.g.: `http://localhost:8880/index`.
-
 #### `OPENMAPS_AUTH_SECRET`
 
 The OAuth consumer secret or OIDC private RSA key in PEM format.
@@ -144,17 +140,55 @@ When using social or TLS authentication, email addresses [allowed to login](http
 
 Defaults to `False`; when set, a cookie from the configured OpenStreetMap instance will be added to the user's session.
 
-#### `OSM_BASE_URL`
-
-Base URL to access OpenStreetMap at, defaults to `https://www.openstreetmap.org`.
-
 #### `OSM_AUTH_URL`
 
 Base URL for accessing OpenStreetMap authentication endpoints, defaults to the value of `OSM_BASE_URL`.
 
+#### `OSM_BASE_URL`
+
+Base URL to access OpenStreetMap at, defaults to `https://www.openstreetmap.org`.
+
+#### `OSM_LOGIN_URL`
+
+URL used to login to OpenStreetMap, defaults to `{OSM_BASE_URL}/login`.
+
+#### `OSM_NEW_USER_URL`
+
+URL used to create new OpenStreetMap users, defaults to `{OSM_BASE_URL}/user/new`.
+
+#### `OSM_OAUTH1_ACCESS_TOKEN_URL`
+
+URL used for OAuth1 access tokens; defaults to `{OSM_AUTH_URL}/oauth/access_token`.
+
+#### `OSM_OAUTH1_AUTHORIZATION_URL`
+
+URL used for OAuth1 authorization; defaults to `{OSM_AUTH_URL}/oauth/authorize`.
+
+#### `OSM_OAUTH1_REQUEST_TOKEN_URL`
+
+URL used for OAuth1 request tokens; defaults to `{OSM_AUTH_URL}/oauth/request_token`
+
+#### `OSM_OAUTH2_ACCESS_TOKEN_URL`
+
+URL used for OAuth2 access tokens; defaults to `{OSM_AUTH_URL}/oauth2/token`.
+
+#### `OSM_OAUTH2_AUTHORIZATION_URL`
+
+URL used for OAuth2 authorization; defaults to `{OSM_AUTH_URL}/oauth2/authorize`.
+
+#### `OSM_OAUTH2_DEFAULT_SCOPE`
+
 #### `OSM_SESSION_KEY`
 
 Cookie used by OpenStreetMap to store its session, defaults to [`_osm_session`](https://github.com/openstreetmap/openstreetmap-website/blob/master/config/initializers/session_store.rb#L4).
+
+#### `OSM_USER_DETAILS_URL`
+
+URL used to query OpenStreetMap user details, defaults to `{OSM_AUTH_URL}/api/0.6/user/details`.
+
+#### `OSM_USER_EMAIL_DOMAIN`
+
+When using OpenStreetMap as an authentication backend, the domain to use for user email addresses since they're not provided by OSM; defaults to `openstreetmap.arpa`.
 
 #### `OSM_USER_PASSWORD`
 
@@ -170,9 +204,29 @@ Defaults to `None`.
 
 Defaults to `django.core.cache.backends.redis.RedisCache`; only valid when the `CACHE_URL` setting is provided.
 
+#### `CSRF_COOKIE_AGE`
+
+Defaults to the value of `SESSION_COOKIE_AGE`.
+
+#### `CSRF_COOKIE_DOMAIN`
+
+Defaults to the value of `SESSION_COOKIE_DOMAIN`.
+
+#### `CSRF_COOKIE_HTTPONLY`
+
+Defaults to `False`.
+
 #### `CSRF_COOKIE_NAME`
 
 Defaults to `openmapscsrf`.
+
+#### `CSRF_COOKIE_PATH`
+
+Defaults to the value of `SESSION_COOKIE_PATH`.
+
+#### `CSRF_COOKIE_SAMESITE`
+
+Defaults to the value of `SESSION_COOKIE_SAMESITE`.
 
 #### `CSRF_COOKIE_SECURE`
 
@@ -181,6 +235,10 @@ Defaults to `False`.
 #### `CSRF_TRUSTED_ORIGINS`
 
 Defaults to `[]`.
+
+#### `CSRF_USE_SESSIONS`
+
+Defaults to `False`.
 
 #### `DATABASE_URL`
 
@@ -202,6 +260,14 @@ Defaults to `en-us`.
 
 Defaults to `openmaps_auth.urls`.
 
+#### `SECRET_KEY`
+
+Please change this to a unique value in production.
+
+#### `SECURE_PROXY_SSL_HEADER`
+
+Defaults to `None`.
+
 #### `SESSION_COOKIE_AGE`
 
 Defaults to `1209600`.
@@ -210,21 +276,41 @@ Defaults to `1209600`.
 
 Defaults to `None`.
 
-#### `SESSION_COOKIE_NAME`
+#### `SESSION_COOKIE_HTTPONLY`
 
-Defaults to `openmapsid`.
+Defaults to `True`.
+
+#### `SESSION_COOKIE_PATH`
+
+Defaults to `/`.
+
+#### `SESSION_COOKIE_SAMESITE`
+
+Defaults to `Lax`.
 
 #### `SESSION_COOKIE_SECURE`
 
 Defaults to `False`.
 
-#### `SECRET_KEY`
-
-Please change this to a unique value in production.
-
 #### `SESSION_ENGINE`
 
 When `CACHE_URL` is set, defaults to `django.contrib.sessions.backends.cache`; `django.contrib.sessions.backends.db` otherwise.
+
+#### `SESSION_EXPIRE_AT_BROWSER_CLOSE`
+
+Defaults to `False`.
+
+#### `SESSION_FILE_PATH`
+
+Defaults to `None`.
+
+#### `SESSION_SAVE_EVERY_REQUEST`
+
+Defaults to `False`.
+
+#### `SESSION_SERIALIZER`
+
+Defaults to `django.contrib.sessions.serializers.JSONSerializer`.
 
 #### `SITE_ID`
 
@@ -236,7 +322,7 @@ Defaults to `/path/to/openmaps-auth/static`.
 
 #### `STATIC_URL`
 
-Defaults to `/static/`.
+Defaults to `{OPENMAPS_AUTH_BASE_PATH}/static/`.
 
 #### `TIME_ZONE`
 
@@ -246,6 +332,18 @@ Defaults to `UTC`.
 
 Defaults to `True`.
 
+#### `USE_L10N`
+
+Defaults to `True`.
+
 #### `USE_TZ`
 
 Defaults to `True`.
+
+#### `USE_X_FORWARDED_HOST`
+
+Defaults to `False`.
+
+#### `USE_X_FORWARDED_PORT`
+
+Defaults to `False`.

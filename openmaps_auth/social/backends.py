@@ -1,13 +1,11 @@
-import os
 import secrets
 import time
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.dom import minidom
 
 from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.backends import ModelBackend
 from jose import jwt
+from social_core.backends.oauth import BaseOAuth2
 from social_core.backends.okta_openidconnect import (
     OktaOpenIdConnect as BaseOktaOpenIdConnect,
 )
@@ -15,6 +13,7 @@ from social_core.backends.open_id_connect import OpenIdConnectAuth
 from social_core.backends.openstreetmap import (
     OpenStreetMapOAuth as BaseOpenStreetMapOAuth,
 )
+from social_core.utils import slugify
 
 
 class LoginGovOpenIdConnect(OpenIdConnectAuth):
@@ -79,9 +78,6 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
         client_secret = self.generate_client_secret()
         return client_id, client_secret
 
-    def get_redirect_uri(self, state=None):
-        return self.setting("REDIRECT_URI", super().get_redirect_uri(state))
-
     def get_user_details(self, response):
         user_details = super().get_user_details(response)
         user_details["email_verified"] = response["email_verified"]
@@ -89,9 +85,6 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
 
 
 class OktaOpenIdConnect(BaseOktaOpenIdConnect):
-    def get_redirect_uri(self, state=None):
-        return self.setting("REDIRECT_URI", super().get_redirect_uri(state))
-
     # This fix for Okta OIDC configuration URLs copied from:
     # https://github.com/python-social-auth/social-core/pull/663
     def oidc_config_url(self):
@@ -115,19 +108,21 @@ class OktaOpenIdConnect(BaseOktaOpenIdConnect):
         return self.get_json(self.oidc_config_url())
 
 
-class OpenStreetMapOAuth(BaseOpenStreetMapOAuth):
-    AUTHORIZATION_URL = f"{settings.OSM_AUTH_URL}/oauth/authorize"
-    REQUEST_TOKEN_URL = f"{settings.OSM_AUTH_URL}/oauth/request_token"
-    ACCESS_TOKEN_URL = f"{settings.OSM_AUTH_URL}/oauth/access_token"
+class OpenStreetMapMixin:
+    def get_osm_email(self, username):
+        return f"{slugify(username)}@{settings.OSM_USER_EMAIL_DOMAIN}"
 
-    def get_redirect_uri(self, state=None):
-        return self.setting("REDIRECT_URI", super().get_redirect_uri(state))
+    def get_user_details(self, response):
+        """Return user details from OpenStreetMap account"""
+        return {
+            "email": self.get_osm_email(response["username"]),
+            "fullname": "",
+            "first_name": "",
+            "last_name": "",
+            "username": response["username"],
+        }
 
-    def user_data(self, access_token, *args, **kwargs):
-        """Return user data provided by OSM"""
-        response = self.oauth_request(
-            access_token, f"{settings.OSM_AUTH_URL}/api/0.6/user/details"
-        )
+    def user_data_response(self, response):
         try:
             dom = minidom.parseString(response.content)
         except ValueError:
@@ -138,8 +133,49 @@ class OpenStreetMapOAuth(BaseOpenStreetMapOAuth):
         except IndexError:
             avatar = None
         return {
-            "id": user.getAttribute("id"),
-            "username": user.getAttribute("display_name"),
             "account_created": user.getAttribute("account_created"),
             "avatar": avatar,
+            "id": user.getAttribute("id"),
+            "username": user.getAttribute("display_name"),
         }
+
+
+class OpenStreetMapOAuth(OpenStreetMapMixin, BaseOpenStreetMapOAuth):
+    """OpenStreetMap OAuth1 authentication backend"""
+
+    ACCESS_TOKEN_URL = settings.OSM_OAUTH1_ACCESS_TOKEN_URL
+    AUTHORIZATION_URL = settings.OSM_OAUTH1_AUTHORIZATION_URL
+    REQUEST_TOKEN_URL = settings.OSM_OAUTH1_REQUEST_TOKEN_URL
+
+    def user_data(self, access_token, *args, **kwargs):
+        """Return user data provided by OSM"""
+        return self.user_data_response(
+            self.oauth_request(access_token, settings.OSM_USER_DETAILS_URL)
+        )
+
+
+class OpenStreetMapOAuth2(OpenStreetMapMixin, BaseOAuth2):
+    """OpenStreetMap OAuth2 authentication backend"""
+
+    name = "openstreetmap-oauth2"
+    ACCESS_TOKEN_METHOD = "POST"
+    ACCESS_TOKEN_URL = settings.OSM_OAUTH2_ACCESS_TOKEN_URL
+    AUTHORIZATION_URL = settings.OSM_OAUTH2_AUTHORIZATION_URL
+    DEFAULT_SCOPE = settings.OSM_OAUTH2_DEFAULT_SCOPE
+    EXTRA_DATA = [
+        ("id", "id"),
+        ("avatar", "avatar"),
+        ("account_created", "account_created"),
+    ]
+    SCOPE_SEPARATOR = "+"
+
+    def user_data(self, access_token, *args, **kwargs):
+        """Return user data provided by OSM"""
+        return user_data_response(
+            self.request(
+                settings.OSM_USER_DETAILS_URL,
+                headers={
+                    "Authorization": f"Bearer {access_token}",
+                },
+            )
+        )
