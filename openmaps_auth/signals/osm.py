@@ -22,7 +22,7 @@ def osm_login(sender, **kwargs):
     ol = osm.login(user)
     if ol.login_response.headers.get("location") != settings.OSM_BASE_URL:
         new_user_data = {
-            "authenticity_token": authenticity_token,
+            "authenticity_token": ol.authenticity_token,
             "username": user.email,
         }
         response = requests.post(
