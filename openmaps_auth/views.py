@@ -18,7 +18,6 @@ from .utils import get_index_url, set_auth_cookies
 logger = logging.getLogger(__name__)
 
 
-
 def index(request):
     return render(request, "index.html", {})
 
