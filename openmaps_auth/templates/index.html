@@ -31,11 +31,9 @@
 {% if messages %}
 <div class="center_section">
   <ul class="messagelist">
-    <!-- prettier-ignore-start -->
     {% for message in messages %}
       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
     {% endfor %}
-    <!-- prettier-ignore-end -->
   </ul>
 </div>
 {% endif %}
