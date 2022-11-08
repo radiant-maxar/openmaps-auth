@@ -1,21 +1,10 @@
 import logging
 import urllib.parse
 
+from cryptography import x509
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
-from django.core.exceptions import ImproperlyConfigured
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-
-try:
-    from cryptography import x509
-    from cryptography.hazmat.backends import default_backend
-except ImportError:
-    raise ImproperlyConfigured("cryptography package is required")
-
-from .cookies import set_auth_cookies
-from .views import get_index_url
 
 
 logger = logging.getLogger(__name__)
@@ -33,7 +22,7 @@ def email_from_tls_request(request):
         client_cert_pem = urllib.parse.parse_qs(f"cert={client_cert_urlencoded}")[
             "cert"
         ][0].encode("ascii")
-        client_cert = x509.load_pem_x509_certificate(client_cert_pem, default_backend())
+        client_cert = x509.load_pem_x509_certificate(client_cert_pem)
         client_san_ext = client_cert.extensions.get_extension_for_oid(
             x509.oid.ExtensionOID.SUBJECT_ALTERNATIVE_NAME
         )
@@ -80,34 +69,3 @@ class TLSClientBackend(ModelBackend):
 
         logger.info(f"tls client authenticated: {email}")
         return user
-
-
-class TLSClientMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        if not hasattr(request, "user"):
-            raise ImproperlyConfigured(
-                "The TLS client middleware requires Django's"
-                " authentication middleware to be installed."
-            )
-
-        if request.user.is_authenticated:
-            return self.get_response(request)
-        user = authenticate(request)
-        if not user or not user.is_authenticated:
-            return self.get_response(request)
-        if request.path_info == reverse("openmaps_login"):
-            logger.info(f"tls client login request: {user}")
-            login(request, user)
-            response = HttpResponseRedirect(get_index_url())
-            return set_auth_cookies(request, response)
-        elif request.path_info == reverse("valid"):
-            logger.info(f"tls client valid request: {user}")
-            request.user = user
-        else:
-            logger.warn(
-                f"tls client ignoring unexpected request location: {request.path_info}"
-            )
-        return self.get_response(request)

@@ -90,7 +90,7 @@ MIDDLEWARE = [
 ]
 
 if OPENMAPS_AUTH_CLIENT_TLS:
-    MIDDLEWARE.append("openmaps_auth.tls.TLSClientMiddleware")
+    MIDDLEWARE.append("openmaps_auth.tls.middleware.TLSClientMiddleware")
 
 ROOT_URLCONF = env.str("ROOT_URLCONF", default="openmaps_auth.urls")
 
@@ -170,7 +170,7 @@ OPENMAPS_AUTH_OIDC_ENDPOINT = env.str("OPENMAPS_AUTH_OIDC_ENDPOINT", default=Non
 AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 if OPENMAPS_AUTH_CLIENT_TLS:
     AUTHENTICATION_BACKENDS = AUTHENTICATION_BACKENDS + (
-        "openmaps_auth.tls.TLSClientBackend",
+        "openmaps_auth.tls.backend.TLSClientBackend",
     )
 
 # Set up social_auth variables when backend is set.
