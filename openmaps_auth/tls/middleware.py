@@ -3,6 +3,7 @@ import logging
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from ..utils import get_index_url, set_auth_cookies
 

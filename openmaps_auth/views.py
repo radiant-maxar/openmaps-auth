@@ -10,7 +10,6 @@ from django.http import (
     JsonResponse,
 )
 from django.shortcuts import render
-from django.urls import reverse
 
 from .utils import get_index_url, set_auth_cookies
 
