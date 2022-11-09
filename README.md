@@ -192,7 +192,7 @@ When using OpenStreetMap as an authentication backend, the domain to use for use
 
 #### `OSM_USER_PASSWORD`
 
-Password to authenticate the user to OpenStreetMap, defaults to `changemenow`.
+Password to authenticate the user to OpenStreetMap, defaults to `None`.
 
 ### Django Settings
 

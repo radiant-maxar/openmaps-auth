@@ -1,0 +1,37 @@
+{% extends "certs.html" %}
+{% load static %}
+{% block app_heading %}<h1 id="default_title" data-name="{{ cert.pk }}">Certificate: {{ cert.pk }}</h1>{% endblock app_heading %}
+{% block center %}
+<div class="center_section">
+  <p>
+    <a class="login_button" href="{% url 'download_cert' cert.pk %}">Download Certificate</a>
+    <a class="login_button" href="{% url 'delete_cert' cert.pk %}">Delete Certificate</a>
+  </p>
+  <p></p>
+</div>
+<div class="center_section">
+  <table>
+    <tr>
+      <th>Valid</th>
+      <td><img src="{% static 'img/icon-yes.svg' if cert.valid else 'img/icon-no.svg' %}"></img></td>
+    </tr>
+    <tr>
+      <th>Expires</th>
+      <td>{{ cert.end }}</td>
+    </tr>
+    <tr>
+      <th>Starts</th>
+      <td>{{ cert.start }}</td>
+    </tr>
+    <tr>
+      <th>Fingerprint</th>
+      <td>{{ cert.fingerprint }}</td>
+    </tr>
+    <tr>
+      <th>Serial</th>
+      <td>{{ cert.serial }}</td>
+    </tr>
+  </table>
+  <p></p>
+</div>
+{% endblock center %}
