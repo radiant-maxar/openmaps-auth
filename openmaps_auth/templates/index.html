@@ -19,14 +19,26 @@
 {% endif %}
 </div>
 <div class="title_text">
-    <h1 class="center_text">Welcome to {{ openmaps_auth.title }}!</h1> 
+    <h1 class="center_text">{% block title_text %}Welcome to {{ openmaps_auth.title }}!{% endblock title_text %}</h1>
 </div>
 {% if request.user.is_authenticated %}
 <div class="app_text">
-    <h1 id="default_title" data-name="FEATURED APPLICATIONS">FEATURED APPLICATIONS</h1>
+    {% block app_heading %}<h1 id="default_title" data-name="FEATURED APPLICATIONS">FEATURED APPLICATIONS</h1>{% endblock app_heading %}
     <p id="featured_application_description" class="hover_text">
     </p>
 </div>
+{% block messages %}
+{% if messages %}
+<div class="center_section">
+  <ul class="messagelist">
+    {% for message in messages %}
+      <li {% if message.tags %}class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+{% endblock messages %}
+{% block center %}
 <div class="center_section">
 <div class="section">
     {% for app_link in openmaps_auth.app_links %}
@@ -48,6 +60,7 @@
     {% endfor %}
     </div>
 <div>
+{% endblock center %}
 {% else %}
   <div class="login_request_text">
     <h1>Please login to access full suite of applications</h1>

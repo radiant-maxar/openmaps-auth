@@ -2,7 +2,9 @@
 <html>
 <head>
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/splash_page.css' %}">
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock style %}
 <link rel="icon" href="{% static 'img/x_logo.png' %}">
 <script>
   function addtext(e) {

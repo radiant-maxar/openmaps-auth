@@ -10,20 +10,11 @@ from django.http import (
     JsonResponse,
 )
 from django.shortcuts import render
-from django.urls import reverse
-from social_core.utils import is_url
 
-from .cookies import set_auth_cookies
+from .utils import get_index_url, set_auth_cookies
 
 
 logger = logging.getLogger(__name__)
-
-
-def get_index_url():
-    if is_url(settings.INDEX_URL):
-        return settings.INDEX_URL
-    else:
-        return reverse(settings.INDEX_URL)
 
 
 def index(request):
