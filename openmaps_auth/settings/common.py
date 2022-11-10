@@ -83,7 +83,7 @@ OSM_USER_HOME_LON = env.float("OSM_USER_HOME_LON", default=None)
 OSM_USER_HOME_ZOOM = env.int("OSM_USER_HOME_ZOOM", default=14)
 OSM_USER_LANGUAGES = env.str("OSM_USER_LANGUAGES", default=None)
 OSM_USER_ORGANIZATION = env.str("OSM_USER_ORGANIZATION", default=None)
-OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
+OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default=None)
 
 JOSM_OAUTH1_CALLBACK_URI = env.str(
     "JOSM_OAUTH1_CALLBACK_URI", default="http://localhost:8111/callback"

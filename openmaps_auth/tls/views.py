@@ -38,6 +38,14 @@ def get_user_certs(user):
 
 
 @login_required
+def cert_delete(request, pk):
+    cert = get_certificate(request.user, pk)
+    cert.delete()
+    messages.add_message(request, messages.WARNING, f"Deleted certificate: {pk}")
+    return HttpResponseRedirect(reverse("cert_list"))
+
+
+@login_required
 def cert_details(request, pk):
     return render(
         request,
@@ -49,15 +57,7 @@ def cert_details(request, pk):
 
 
 @login_required
-def delete_cert(request, pk):
-    cert = get_certificate(request.user, pk)
-    cert.delete()
-    messages.add_message(request, messages.WARNING, f"Deleted certificate: {pk}")
-    return HttpResponseRedirect(reverse("list_certs"))
-
-
-@login_required
-def download_cert(request, pk):
+def cert_download(request, pk):
     cert = get_certificate(request.user, pk)
     with open(cert.p12_file, "rb") as p12_fh:
         p12_data = p12_fh.read()
@@ -70,10 +70,10 @@ def download_cert(request, pk):
 
 
 @login_required
-def list_certs(request):
+def cert_list(request):
     return render(
         request,
-        "list_certs.html",
+        "cert_list.html",
         {
             "certificates": get_user_certs(request.user),
         },
@@ -81,7 +81,7 @@ def list_certs(request):
 
 
 @login_required
-def new_cert(request):
+def cert_new(request):
     if (
         get_user_certs(request.user).count()
         >= settings.OPENMAPS_AUTH_CLIENT_TLS_MAX_CERTS
@@ -91,7 +91,7 @@ def new_cert(request):
             messages.ERROR,
             f"Cannot have more than {settings.OPENMAPS_AUTH_CLIENT_TLS_MAX_CERTS} valid certificates",
         )
-        return HttpResponseRedirect(reverse("list_certs"))
+        return HttpResponseRedirect(reverse("cert_list"))
     cert = Certificate(user=request.user)
     cert.save()
     messages.add_message(

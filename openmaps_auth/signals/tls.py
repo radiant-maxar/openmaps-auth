@@ -65,9 +65,10 @@ def cert_create(sender, **kwargs):
         ]
         logger.debug(f"step ca certificate args: {step_ca_cert_args}")
         status, output = subprocess.getstatusoutput(" ".join(step_ca_cert_args))
-        if status != 0:
+        if status != os.EX_OK:
             logger.error(f"failed to create certificate: {output}")
             raise BadRequest
+        logger.info(f"step ca signed cert for {cert.user.email}: {cert.cert_file}")
 
         # Create temporary p12 password file.
         p12_password_file = os.path.join(temp_dir, "p12-password.txt")
@@ -90,9 +91,10 @@ def cert_create(sender, **kwargs):
         ]
         logger.debug(f"step certificate p12 args: {step_cert_p12_args}")
         status, output = subprocess.getstatusoutput(" ".join(step_cert_p12_args))
-        if status != 0:
+        if status != os.EX_OK:
             logger.error(f"failed to create p12 file: {output}")
             raise BadRequest
+        logger.info(f"step cli created p12 for {cert.user.email}: {cert.p12_file}")
 
     # Inspect the certificate to get the validity dates, serial number, and fingerprint.
     with open(cert.cert_file, "rb") as cert_fh:
@@ -126,13 +128,13 @@ def cert_revoke(sender, **kwargs):
         ]
         logger.debug(f"step ca revoke args: {step_ca_revoke_args}")
         status, output = subprocess.getstatusoutput(" ".join(step_ca_revoke_args))
-        if status != 0:
+        if status != os.EX_OK:
             logger.error(f"failed to revoke certificate: {output}")
             raise BadRequest
         logger.info(f"step ca revoked certificate with serial {cert.serial}")
     else:
         logger.info(
-            f"skipping step ca revocation for certificate with serial {cert.serial}"
+            f"skipping step ca revocation for invalid certificate with serial {cert.serial}"
         )
 
     if os.path.isfile(cert.key_file):
