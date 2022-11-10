@@ -65,5 +65,5 @@ class TLSClientBackend(ModelBackend):
             user = UserModel(**{UserModel.USERNAME_FIELD: email})
             user.save()
 
-        logger.info(f"tls client authenticated: {email}")
+        logger.debug(f"tls client authenticated: {email}")
         return user

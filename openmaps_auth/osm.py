@@ -44,11 +44,19 @@ def api_user_details(user):
     }
 
 
-def authenticity_token(content):
+def get_authenticity_token(content):
     return (
         bs4.BeautifulSoup(content, "html.parser")
         .find("input", {"name": "authenticity_token"})
         .get("value")
+    )
+
+
+def get_csrf_token(content):
+    return (
+        bs4.BeautifulSoup(content, features="html.parser")
+        .find("meta", {"name": "csrf-token"})
+        .get("content")
     )
 
 
@@ -66,11 +74,7 @@ def login(user):
 
     # Get OSM CSRF token.
     response = requests.get(settings.OSM_LOGIN_URL, cookies=cookies)
-    authenticity_token = (
-        bs4.BeautifulSoup(response.content, features="html.parser")
-        .find("meta", {"name": "csrf-token"})
-        .get("content")
-    )
+    authenticity_token = get_csrf_token(response.content)
 
     # Login to OSM.
     login_data = {
@@ -131,7 +135,7 @@ def oauth1_application(
             new_client_url, allow_redirects=False, cookies=ol.cookies
         )
         new_client_data = {
-            "authenticity_token": authenticity_token(new_client_init.content),
+            "authenticity_token": get_authenticity_token(new_client_init.content),
             "client_application[name]": name,
             "client_application[url]": settings.OSM_BASE_URL,
             "client_application[support_url]": support_url,
@@ -177,7 +181,7 @@ def oauth1_application(
         )
         auth_init = oauth1_session.get(auth_url, allow_redirects=False)
         authorize_data = {
-            "authenticity_token": authenticity_token(auth_init.content),
+            "authenticity_token": get_authenticity_token(auth_init.content),
             "oauth_token": req_token["oauth_token"],
             "allow_read_prefs": "1" if allow_read_prefs else "0",
             "allow_write_prefs": "1" if allow_write_prefs else "0",

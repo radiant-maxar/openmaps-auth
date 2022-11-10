@@ -61,7 +61,7 @@ def cert_create(sender, **kwargs):
             "--provisioner-password-file",
             settings.STEP_PROVISIONER_PASSWORD_FILE,
             "--not-after",
-            f"{settings.OPENMAPS_AUTH_CLIENT_TLS_DURATION}h",
+            settings.OPENMAPS_AUTH_CLIENT_TLS_DURATION,
         ]
         logger.debug(f"step ca certificate args: {step_ca_cert_args}")
         status, output = subprocess.getstatusoutput(" ".join(step_ca_cert_args))

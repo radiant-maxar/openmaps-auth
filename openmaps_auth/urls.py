@@ -24,5 +24,7 @@ if settings.OPENMAPS_AUTH_CLIENT_TLS:
     ]
     if settings.OPENMAPS_AUTH_OSM_SESSION:
         urlpatterns += [
-            path(f"{settings.BASE_URL_PATTERN}josm/", include("openmaps_auth.josm.urls")),
+            path(
+                f"{settings.BASE_URL_PATTERN}josm/", include("openmaps_auth.josm.urls")
+            ),
         ]

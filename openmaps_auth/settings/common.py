@@ -42,8 +42,8 @@ OPENMAPS_AUTH_CLIENT_TLS_CERT_HEADER = env.bool(
 OPENMAPS_AUTH_CLIENT_TLS_VERIFY_HEADER = env.bool(
     "OPENMAPS_AUTH_CLIENT_TLS_VERIFY_HEADER", default="X-TLS-Client-Verify"
 )
-OPENMAPS_AUTH_CLIENT_TLS_DURATION = env.int(
-    "OPENMAPS_AUTH_CLIENT_TLS_DURATION", default=744
+OPENMAPS_AUTH_CLIENT_TLS_DURATION = env.str(
+    "OPENMAPS_AUTH_CLIENT_TLS_DURATION", default="744h"
 )
 OPENMAPS_AUTH_CLIENT_TLS_MAX_CERTS = env.int(
     "OPENMAPS_AUTH_CLIENT_TLS_MAX_CERTS", default=5
@@ -89,13 +89,19 @@ JOSM_OAUTH1_CALLBACK_URI = env.str(
     "JOSM_OAUTH1_CALLBACK_URI", default="http://localhost:8111/callback"
 )
 JOSM_OAUTH1_NAME = env.str("JOSM_OAUTH1_NAME", "JOSM - Java OpenStreetMap Editor")
+JOSM_PREFERENCES = env.json(
+    "JOSM_PREFERENCES",
+    default=[
+        {
+            "key": "default.osm.tile.source.url",
+            "value": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        }
+    ],
+)
 JOSM_PREFERENCES_VERSION = env.str("JOSM_PREFERENCES_VERSION", "18303")
 JOSM_PREFERENCES_XMLNS = env.str(
     "JOSM_PREFERENCES_XMLNS", "http://josm.openstreetmap.de/preferences-1.0"
 )
-JOSM_ASSETS_URL = env.str("JOSM_ASSETS_URL", default=OSM_BASE_URL)
-JOSM_GEONODE_URL = env.str("JOSM_GEONODE_URL", default=None)
-JOSM_OSM_URL = env.str("JOSM_OSM_URL", default=OSM_BASE_URL)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 DEBUG = env.bool("DEBUG", default=False)

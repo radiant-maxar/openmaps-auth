@@ -32,7 +32,7 @@ class TLSClientMiddleware:
             response = HttpResponseRedirect(get_index_url())
             return set_auth_cookies(request, response)
         elif request.path_info == reverse("valid"):
-            logger.info(f"tls client valid request: {user}")
+            logger.debug(f"tls client valid request: {user}")
             request.user = user
         else:
             logger.warn(

@@ -1,6 +1,5 @@
 import io
 import logging
-import urllib.parse
 import xml.dom.minidom
 import xml.etree.ElementTree
 
@@ -18,22 +17,10 @@ def josm_preferences_xml(user):
     josm_preferences = xml.etree.ElementTree.Element("preferences")
     josm_preferences.attrib["version"] = settings.JOSM_PREFERENCES_VERSION
     josm_preferences.attrib["xmlns"] = settings.JOSM_PREFERENCES_XMLNS
-
-    preference_tags = (
-        (
-            "default.osm.tile.source.url",
-            urllib.parse.urljoin(
-                settings.JOSM_OSM_URL, "/osm_tiles/{zoom}/{x}/{y}.png"
-            ),
-        ),
-        (
-            "mapedit.api.url",
-            urllib.parse.urljoin(settings.JOSM_OSM_URL, "/api"),
-        ),
-        ("mapedit.josm.url", settings.JOSM_ASSETS_URL),
-        ("mapedit.nome.url", settings.JOSM_OSM_URL),
-        ("mapedit.osm.url", settings.JOSM_OSM_URL),
-        ("mapedit.testing.url", settings.JOSM_OSM_URL),
+    preference_tags = tuple(
+        (item.get("key"), item.get("value")) for item in settings.JOSM_PREFERENCES
+    )
+    preference_tags += (
         ("oauth.access-token.key", user.josm_oauth1_token_key),
         ("oauth.access-token.secret", user.josm_oauth1_token_secret),
         ("oauth.settings.consumer-key", user.josm_oauth1_key),
@@ -43,14 +30,10 @@ def josm_preferences_xml(user):
         ("user-cert.pass", user.pkcs12_password),
         ("user-cert.path", "{}.p12".format(user.email.split("@")[0])),
     )
-    if settings.JOSM_GEONODE_URL:
-        preference_tags += (("mapedit.geonode.url", settings.JOSM_GEONODE_URL),)
-
     for tag_key, tag_value in preference_tags:
         tag = xml.etree.ElementTree.SubElement(josm_preferences, "tag")
         tag.attrib["key"] = tag_key
         tag.attrib["value"] = tag_value
-
     return xml.dom.minidom.parseString(
         xml.etree.ElementTree.tostring(
             josm_preferences,
