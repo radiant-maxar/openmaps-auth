@@ -171,7 +171,7 @@ class OpenStreetMapOAuth2(OpenStreetMapMixin, BaseOAuth2):
 
     def user_data(self, access_token, *args, **kwargs):
         """Return user data provided by OSM"""
-        return user_data_response(
+        return self.user_data_response(
             self.request(
                 settings.OSM_USER_DETAILS_URL,
                 headers={
