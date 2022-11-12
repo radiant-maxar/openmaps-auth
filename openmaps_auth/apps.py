@@ -9,7 +9,7 @@ class OpenMapsAuthConfig(AppConfig):
 
     def ready(self):
         if settings.OPENMAPS_AUTH_CLIENT_TLS:
-            from .signals import tls
+            from .signals import tls  # noqa: F401
 
         if settings.OPENMAPS_AUTH_OSM_SESSION:
-            from .signals import osm
+            from .signals import osm  # noqa: F401

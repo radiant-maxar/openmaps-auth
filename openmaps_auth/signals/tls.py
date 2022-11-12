@@ -1,4 +1,3 @@
-import datetime
 import logging
 import os
 import os.path
@@ -29,7 +28,7 @@ def cert_create(sender, **kwargs):
     if cert.serial:
         # If serial number already exists, then don't try and issue again
         # in the `save()` call and return.
-        logger.debug(f"certificate already exists")
+        logger.debug("certificate already exists")
         return
 
     # Ensure output directories exist.

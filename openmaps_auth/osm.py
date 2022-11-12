@@ -7,7 +7,6 @@ import xml.dom.minidom
 import bs4
 import requests
 from django.conf import settings
-from django.core.exceptions import BadRequest
 from requests_oauthlib import OAuth1Session
 
 from .utils import random_password
