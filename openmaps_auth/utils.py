@@ -2,6 +2,7 @@ import string
 
 from django.conf import settings
 from django.contrib import messages
+from django.urls import reverse
 from django.utils.crypto import get_random_string
 from social_core.utils import is_url
 
