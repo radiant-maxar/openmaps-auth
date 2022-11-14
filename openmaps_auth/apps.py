@@ -9,4 +9,4 @@ class OpenMapsAuthConfig(AppConfig):
 
     def ready(self):
         if settings.OPENMAPS_AUTH_OSM_SESSION:
-            from .signals import osm
+            from .signals import osm  # noqa: F401
