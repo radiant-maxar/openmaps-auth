@@ -102,14 +102,15 @@ class Certificate(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
-    fingerprint = models.CharField(
-        _("certificate sha256 fingerprint"), max_length=64, editable=False
-    )
     serial = models.CharField(
-        _("certificate serial number"), max_length=64, editable=False
+        _("certificate serial number"), max_length=50, editable=False
     )
-    start = models.DateTimeField(_("certificate validity start"), editable=False)
-    end = models.DateTimeField(_("certificate validity end"), editable=False)
+    start = models.DateTimeField(
+        _("certificate validity start"), db_index=True, editable=False
+    )
+    end = models.DateTimeField(
+        _("certificate validity end"), db_index=True, editable=False
+    )
 
     class Meta:
         verbose_name = _("certificate")

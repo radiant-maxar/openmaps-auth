@@ -5,7 +5,6 @@ import subprocess
 import tempfile
 
 from cryptography import x509
-from cryptography.hazmat.primitives.hashes import SHA256
 from django.conf import settings
 from django.core.exceptions import BadRequest
 from django.db.models.signals import pre_delete, pre_save
@@ -95,10 +94,9 @@ def cert_create(sender, **kwargs):
             raise BadRequest
         logger.info(f"step cli created p12 for {cert.user.email}: {cert.p12_file}")
 
-    # Inspect the certificate to get the validity dates, serial number, and fingerprint.
+    # Inspect the certificate to get the validity dates, and serial number.
     with open(cert.cert_file, "rb") as cert_fh:
         tls_cert = x509.load_pem_x509_certificate(cert_fh.read())
-    cert.fingerprint = "".join("%02x" % b for b in tls_cert.fingerprint(SHA256()))
     # Use string instead of trying to represent 2**159 integer.
     cert.serial = str(tls_cert.serial_number)
     cert.start = timezone.make_aware(tls_cert.not_valid_before, timezone.utc)
