@@ -94,6 +94,13 @@ class User(AbstractUser):
     EMAIL_FIELD = "email"
     REQUIRED_FIELDS = []
 
+    @property
+    def email_local_part(self):
+        """
+        Returns the local-part of the user's email address.
+        """
+        return self.email.split("@")[0]
+
 
 class Certificate(models.Model):
     """
@@ -130,7 +137,7 @@ class Certificate(models.Model):
 
     @property
     def p12_name(self):
-        return "{}.p12".format(self.user.email.split("@")[0])
+        return f"{self.user.email_local_part}.p12"
 
     @property
     def certs_path(self):

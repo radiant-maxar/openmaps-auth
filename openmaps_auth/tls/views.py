@@ -43,6 +43,7 @@ def cert_delete(request, pk):
     cert = get_certificate(request.user, pk)
     cert.delete()
     messages.add_message(request, messages.WARNING, f"Deleted certificate: {pk}")
+    logger.info(f"{request.user.email} deleted certificate {pk}")
     return HttpResponseRedirect(reverse("cert_list"))
 
 

@@ -28,7 +28,7 @@ def josm_preferences_xml(user):
         ("oauth.settings.use-default", "false"),
         ("osm-server.auth-method", "oauth"),
         ("user-cert.pass", user.pkcs12_password),
-        ("user-cert.path", "{}.p12".format(user.email.split("@")[0])),
+        ("user-cert.path", "{}.p12".format(user.email_local_part)),
     )
     for tag_key, tag_value in preference_tags:
         tag = xml.etree.ElementTree.SubElement(josm_preferences, "tag")

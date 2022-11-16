@@ -35,7 +35,7 @@ def cert_create(sender, **kwargs):
         os.mkdir(settings.STEP_CERTS, mode=0o0755)
         logger.info(f"created step certficate directory: {settings.STEP_CERTS}")
     if not os.path.isdir(cert.certs_path):
-        os.mkdir(cert.certs_path, mode=0o0750)
+        os.mkdir(cert.certs_path, mode=0o0755)
         logger.info(f"created user certficate directory: {cert.certs_path}")
     if not os.path.isdir(settings.STEP_SECRETS):
         os.mkdir(settings.STEP_SECRETS, mode=0o0750)
@@ -80,7 +80,6 @@ def cert_create(sender, **kwargs):
             settings.STEP_CLI,
             "certificate",
             "p12",
-            "--force",
             "--password-file",
             p12_password_file,
             cert.p12_file,

@@ -13,7 +13,7 @@
   <table>
     <tr>
       <th>Valid</th>
-      <td><img src="{% static 'img/icon-yes.svg' if cert.valid else 'img/icon-no.svg' %}"></td>
+      <td><img src="{% if cert.valid %}{% static 'img/icon-yes.svg' %}{% else %}{% static 'img/icon-no.svg' %}{% endif %}"></td>
     </tr>
     <tr>
       <th>Expires</th>
