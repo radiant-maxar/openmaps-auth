@@ -69,7 +69,7 @@ def cert_download(request, pk, modern=False):
             b"",
             p12_obj[0],
             p12_obj[1],
-            None,
+            p12_obj[2],
             BestAvailableEncryption(p12_password),
         )
         logger.info(f"{request.user.email} downloaded modern certificate {cert.pk}")
