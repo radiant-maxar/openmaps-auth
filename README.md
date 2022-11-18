@@ -190,10 +190,6 @@ URL used to query OpenStreetMap user details, defaults to `{OSM_AUTH_URL}/api/0.
 
 When using OpenStreetMap as an authentication backend, the domain to use for user email addresses since they're not provided by OSM; defaults to `openstreetmap.arpa`.
 
-#### `OSM_USER_PASSWORD`
-
-Password to authenticate the user to OpenStreetMap, defaults to `None`.
-
 ### Django Settings
 
 #### `CACHE_URL`

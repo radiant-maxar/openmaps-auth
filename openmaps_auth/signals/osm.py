@@ -25,7 +25,11 @@ def osm_login(sender, **kwargs):
     if ol.login_response.headers.get("location") != settings.OSM_BASE_URL:
         # New user's roles: make administrator when a superuser.
         user_roles = ["moderator"]
-        if user.is_superuser or user.email in settings.OSM_USER_ADMINS:
+        if (
+            user.is_superuser
+            or user.email in settings.OSM_USER_ADMINS
+            or settings.OSM_USER_ALL_ADMINS
+        ):
             user_roles.append("administrator")
         user_roles_str = ",".join(user_roles)
         logger.debug(f"osm user roles: {user_roles_str}")

@@ -10,7 +10,6 @@ from django.contrib.auth.models import (
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from . import osm
 from . import utils
 
 
@@ -42,7 +41,7 @@ class User(AbstractUser):
     osm_password = models.CharField(
         _("OpenStreetMap password"),
         max_length=128,
-        default=osm.password,
+        default=utils.random_password,
         editable=False,
     )
 
@@ -110,7 +109,7 @@ class Certificate(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     serial = models.CharField(
-        _("certificate serial number"), max_length=50, editable=False
+        _("certificate serial number"), db_index=True, editable=False, max_length=50
     )
     start = models.DateTimeField(
         _("certificate validity start"), db_index=True, editable=False

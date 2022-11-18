@@ -72,6 +72,7 @@ OSM_OAUTH2_AUTHORIZATION_URL = env.str(
 )
 OSM_OAUTH2_DEFAULT_SCOPE = env.list("OSM_OAUTH2_DEFAULT_SCOPE", default=["read_prefs"])
 OSM_USER_ADMINS = env.list("OSM_USER_ADMINS", default=[])
+OSM_USER_ALL_ADMINS = env.bool("OSM_USER_ALL_ADMINS", default=False)
 OSM_USER_COUNTRY = env.str("OSM_USER_COUNTRY", default=None)
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
 OSM_USER_DETAILS_URL = env.str(
@@ -83,7 +84,6 @@ OSM_USER_HOME_LON = env.float("OSM_USER_HOME_LON", default=None)
 OSM_USER_HOME_ZOOM = env.int("OSM_USER_HOME_ZOOM", default=14)
 OSM_USER_LANGUAGES = env.str("OSM_USER_LANGUAGES", default=None)
 OSM_USER_ORGANIZATION = env.str("OSM_USER_ORGANIZATION", default=None)
-OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default=None)
 
 JOSM_OAUTH1_CALLBACK_URI = env.str(
     "JOSM_OAUTH1_CALLBACK_URI", default="http://localhost:8111/callback"
@@ -266,11 +266,11 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = INDEX_URL
 
 # When using social or tls login, restrict access based on email or domain
 # whitelists if they are defined.
-OPENMAPS_AUTH_WHITELISTED_DOMAINS = env.list(
+OPENMAPS_AUTH_WHITELISTED_DOMAINS = env.json(
     "OPENMAPS_AUTH_WHITELISTED_DOMAINS", default=[]
 )
 SOCIAL_AUTH_WHITELISTED_DOMAINS = OPENMAPS_AUTH_WHITELISTED_DOMAINS
-OPENMAPS_AUTH_WHITELISTED_EMAILS = env.list(
+OPENMAPS_AUTH_WHITELISTED_EMAILS = env.json(
     "OPENMAPS_AUTH_WHITELISTED_EMAILS", default=[]
 )
 SOCIAL_AUTH_WHITELISTED_EMAILS = OPENMAPS_AUTH_WHITELISTED_EMAILS

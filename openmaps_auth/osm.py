@@ -210,7 +210,3 @@ def oauth1_application(
         "token_key": oauth1_token_key,
         "token_secret": oauth1_token_secret,
     }
-
-
-def password(**kwargs):
-    return settings.OSM_USER_PASSWORD or random_password(**kwargs)
