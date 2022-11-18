@@ -9,8 +9,6 @@ import requests
 from django.conf import settings
 from requests_oauthlib import OAuth1Session
 
-from .utils import random_password
-
 
 logger = logging.getLogger(__name__)
 
