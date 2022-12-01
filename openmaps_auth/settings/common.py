@@ -97,7 +97,7 @@ JOSM_PREFERENCES = env.json(
     default=[
         {
             "key": "default.osm.tile.source.url",
-            "value": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "value": "https://tile.openstreetmap.org/{zoom}/{x}/{y}.png",
         }
     ],
 )
