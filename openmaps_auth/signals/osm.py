@@ -22,7 +22,7 @@ def osm_login(sender, **kwargs):
     request = kwargs.get("request")
     user = kwargs.get("user")
     ol = osm.login(user)
-    if ol.login_response.headers.get("location") != settings.OSM_BASE_URL:
+    if ol.login_response.headers.get("location").rstrip("/") != settings.OSM_BASE_URL:
         # New user's roles: make administrator when a superuser.
         user_roles = ["moderator"]
         if (
@@ -104,7 +104,7 @@ def osm_login(sender, **kwargs):
         if response.status_code == 204:
             logger.info(f"created new osm user: {user}")
             ol = osm.login(user)
-            if ol.login_response.headers.get("location") != settings.OSM_BASE_URL:
+            if ol.login_response.headers.get("location").rstrip("/") != settings.OSM_BASE_URL:
                 logger.error(f"failed to login into osm after user creation: {user}")
                 raise BadRequest
         else:
