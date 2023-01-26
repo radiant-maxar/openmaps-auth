@@ -1,0 +1,2 @@
+-r requirements.in
+ipython==8.8.0
