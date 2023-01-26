@@ -17,23 +17,45 @@ def josm_preferences_xml(user):
     josm_preferences = xml.etree.ElementTree.Element("preferences")
     josm_preferences.attrib["version"] = settings.JOSM_PREFERENCES_VERSION
     josm_preferences.attrib["xmlns"] = settings.JOSM_PREFERENCES_XMLNS
-    preference_tags = tuple(
-        (item.get("key"), item.get("value")) for item in settings.JOSM_PREFERENCES
+
+    # Add any tag elements.
+    preference_tags = settings.JOSM_PREFERENCES.get("tags", {})
+    preference_tags.update(
+        {
+            "oauth.access-token.key": user.josm_oauth1_token_key,
+            "oauth.access-token.secret": user.josm_oauth1_token_secret,
+            "oauth.settings.consumer-key": user.josm_oauth1_key,
+            "oauth.settings.consumer-secret": user.josm_oauth1_secret,
+            "oauth.settings.use-default": "false",
+            "osm-server.auth-method": "oauth",
+            "user-cert.pass": user.pkcs12_password,
+            "user-cert.path": "{}.p12".format(user.email_local_part),
+        }
     )
-    preference_tags += (
-        ("oauth.access-token.key", user.josm_oauth1_token_key),
-        ("oauth.access-token.secret", user.josm_oauth1_token_secret),
-        ("oauth.settings.consumer-key", user.josm_oauth1_key),
-        ("oauth.settings.consumer-secret", user.josm_oauth1_secret),
-        ("oauth.settings.use-default", "false"),
-        ("osm-server.auth-method", "oauth"),
-        ("user-cert.pass", user.pkcs12_password),
-        ("user-cert.path", "{}.p12".format(user.email_local_part)),
-    )
-    for tag_key, tag_value in preference_tags:
-        tag = xml.etree.ElementTree.SubElement(josm_preferences, "tag")
-        tag.attrib["key"] = tag_key
-        tag.attrib["value"] = tag_value
+    for tag_key, tag_value in preference_tags.items():
+        tag_elem = xml.etree.ElementTree.SubElement(josm_preferences, "tag")
+        tag_elem.attrib["key"] = tag_key
+        tag_elem.attrib["value"] = tag_value
+
+    # Add any list elements.
+    for list_key, list_value in settings.JOSM_PREFERENCES.get("lists", {}).items():
+        list_elem = xml.etree.ElementTree.SubElement(josm_preferences, "list")
+        list_elem.attrib["key"] = list_key
+        for entry in list_value:
+            entry_tag = xml.etree.ElementTree.SubElement(list_elem, "entry")
+            entry_tag.attrib["value"] = entry
+
+    # Add any maps elements.
+    for maps_key, maps_value in settings.JOSM_PREFERENCES.get("maps", {}).items():
+        maps_elem = xml.etree.ElementTree.SubElement(josm_preferences, "maps")
+        maps_elem.attrib["key"] = maps_key
+        for map_dict in maps_value:
+            map_elem = xml.etree.ElementTree.SubElement(maps_elem, "map")
+            for tag_key, tag_value in map_dict.items():
+                map_tag = xml.etree.ElementTree.SubElement(map_elem, "tag")
+                map_tag.attrib["key"] = tag_key
+                map_tag.attrib["value"] = tag_value
+
     return xml.dom.minidom.parseString(
         xml.etree.ElementTree.tostring(
             josm_preferences,

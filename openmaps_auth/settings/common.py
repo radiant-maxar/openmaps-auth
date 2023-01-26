@@ -74,7 +74,7 @@ OSM_OAUTH2_AUTHORIZATION_URL = env.str(
     "OSM_OAUTH2_AUTHORIZATION_URL", default=f"{OSM_AUTH_URL}/oauth2/authorize"
 )
 OSM_OAUTH2_DEFAULT_SCOPE = env.list("OSM_OAUTH2_DEFAULT_SCOPE", default=["read_prefs"])
-OSM_USER_ADMINS = env.list("OSM_USER_ADMINS", default=[])
+OSM_USER_ADMINS = env.json("OSM_USER_ADMINS", default=[])
 OSM_USER_ALL_ADMINS = env.bool("OSM_USER_ALL_ADMINS", default=False)
 OSM_USER_COUNTRY = env.str("OSM_USER_COUNTRY", default=None)
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
@@ -94,12 +94,11 @@ JOSM_OAUTH1_CALLBACK_URI = env.str(
 JOSM_OAUTH1_NAME = env.str("JOSM_OAUTH1_NAME", "JOSM - Java OpenStreetMap Editor")
 JOSM_PREFERENCES = env.json(
     "JOSM_PREFERENCES",
-    default=[
-        {
-            "key": "default.osm.tile.source.url",
-            "value": "https://tile.openstreetmap.org/{zoom}/{x}/{y}.png",
+    default={
+        "tags": {
+            "default.osm.tile.source.url": "https://tile.openstreetmap.org/{zoom}/{x}/{y}.png",
         }
-    ],
+    },
 )
 JOSM_PREFERENCES_VERSION = env.str("JOSM_PREFERENCES_VERSION", "18303")
 JOSM_PREFERENCES_XMLNS = env.str(
