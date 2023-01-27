@@ -72,7 +72,9 @@ The callback URL used to set [`LOGIN_REDIRECT_URL`](https://docs.djangoproject.c
 
 #### `OPENMAPS_AUTH_CLIENT_TLS`
 
-When set, enables authentication with TLS client certificates; requires having a certificate authority (CA), the configuration of which is beyond the scope of this document.  The [`cryptography`](https://cryptography.io/en/latest/) package is required to use this option.  Here's an example of additional [Nginx configuration](https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_verify_client) to enable authentication with TLS certificates:
+When set, enables authentication with TLS client certificates; defaults to `False` unless both the `STEP_PROVISIONER` and `STEP_PROVISIONER_PASSWORD_FILE` are configured.  Requires having a [Smallstep certificate authority](https://smallstep.com/docs/step-ca) running and configured for use (e.g., `step ca bootstrap --ca-url https://my-step-ca`).  In addition, the [Smallstep CLI](https://smallstep.com/cli/), the `step` command, is required to be installed on the host.  Smallstep tool configuration and general TLS concepts are beyond the scope of this document.
+
+Here's an example of additional [Nginx configuration](https://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_verify_client) to enable authentication with TLS certificates:
 
 ```
 ssl_client_certificate /path/to/ca-for-clients.pem;
@@ -103,6 +105,18 @@ HTTP header for client certifcate in PEM format, and URL encoded like Nginx's [`
 #### `OPENMAPS_AUTH_CLIENT_TLS_VERIFY_HEADER`
 
 HTTP header for client certifcate verification status like Nginx's [`$ssl_client_verify`](https://nginx.org/en/docs/http/ngx_http_ssl_module.html#var_ssl_client_verify) variable; defaults to `X-TLS-Client-Verify`.
+
+#### `OPENMAPS_AUTH_CLIENT_TLS_DURATION`
+
+The duration of issued client certificates, defaults to `744h`.
+
+#### `OPENMAPS_AUTH_CLIENT_TLS_MAX_CERTS`
+
+The maximum number of valid client certificates allowed to be issued to user, defaults to `3`.
+
+#### `OPENMAPS_AUTH_CLIENT_TLS_VERIFY_SERIAL`
+
+Defaults to `True`; when set, verify that the certificate's serial number is recorded in the database.  This allows the application to infer a certificate's validity without CRLs or OCSP queries.  Set to `False` to allow certificates not created with this application.
 
 #### `OPENMAPS_AUTH_INDEX_URL`
 
@@ -139,6 +153,34 @@ When using social or TLS authentication, email addresses [allowed to login](http
 #### `OPENMAPS_AUTH_OSM_SESSION`
 
 Defaults to `False`; when set, a cookie from the configured OpenStreetMap instance will be added to the user's session.
+
+#### `JOSM_PREFERENCES`
+
+A JSON dictionary of additional lists, maps, or tag elements to add to the generated preferences file.  Defaults to:
+
+```json
+{
+  "tags": {
+    "default.osm.tile.source.url": "https://tile.openstreetmap.org/{zoom}/{x}/{y}.png",
+  }
+}
+```
+
+#### `JOSM_OAUTH1_CALLBACK_URI`
+
+Defaults to `http://localhost:8111/callback`.
+
+#### `JOSM_OAUTH1_NAME`
+
+The name of the OAuth1 application to create for OSM users; defaults to `JOSM - Java OpenStreetMap Editor`.
+
+#### `JOSM_PREFERENCES_VERSION`
+
+The version of JOSM for the generated preferences file, defaults to `18303`.
+
+#### `JOSM_PREFERENCES_XMLNS`
+
+The XML namespace for the root `<preferences>` element in the generated JOSM preferences file, defaults to `http://josm.openstreetmap.de/preferences-1.0`.
 
 #### `OSM_AUTH_URL`
 
@@ -182,6 +224,18 @@ URL used for OAuth2 authorization; defaults to `{OSM_AUTH_URL}/oauth2/authorize`
 
 Cookie used by OpenStreetMap to store its session, defaults to [`_osm_session`](https://github.com/openstreetmap/openstreetmap-website/blob/master/config/initializers/session_store.rb#L4).
 
+#### `OSM_USER_ADMINS`
+
+A JSON list of OSM user email addresses that will be granted the `administrator` role when created, defaults to `[]`.
+
+#### `OSM_USER_ALL_ADMINS`
+
+When enabled, all OSM users will be granted the `administrator` role when created, defaults to `False`.
+
+#### `OSM_USER_COUNTRY`
+
+The country to use for all OSM users created instead of inferring from browser request headers, defaults to `None`.
+
 #### `OSM_USER_DETAILS_URL`
 
 URL used to query OpenStreetMap user details, defaults to `{OSM_AUTH_URL}/api/0.6/user/details`.
@@ -189,6 +243,50 @@ URL used to query OpenStreetMap user details, defaults to `{OSM_AUTH_URL}/api/0.
 #### `OSM_USER_EMAIL_DOMAIN`
 
 When using OpenStreetMap as an authentication backend, the domain to use for user email addresses since they're not provided by OSM; defaults to `openstreetmap.arpa`.
+
+#### `OSM_USER_HOME_LAT`
+
+The default home latitude to use for created OSM users, defaults to `None`.
+
+#### `OSM_USER_HOME_LON`
+
+The default home longitude to use for created OSM users, defaults to `None`.
+
+#### `OSM_USER_HOME_ZOOM`
+
+The default zoom level to use for created OSM users, defaults to `14`.
+
+#### `OSM_USER_LANGUAGES`
+
+The languages to use for all created OSM users instead of inferring from request headers, defaults to `None`.
+
+#### `OSM_USER_ORGANIZATION`
+
+The organization to use for all created OSM users, defaults to `None`.
+
+#### `STEPPATH`
+
+The path used by Smallstep CA tools, defaults to `/path/to/openmaps-auth/.step`.
+
+#### `STEP_CERTS`
+
+The path used for Smallstep CA certificate files, defaults to `${STEPPATH}/certs`.
+
+#### `STEP_CLI`
+
+Path to the [Smallstep CLI](https://smallstep.com/cli/) binary, defaults to `step`.
+
+#### `STEP_PROVISIONER`
+
+The name of the [Smallstep CA](https://smallstep.com/certificates/) [provisioner](https://smallstep.com/docs/step-ca/provisioners/#jwk) to use; only JWK (JSON Web Key) is supported at this time.
+
+#### `STEP_PROVISIONER_PASSWORD_FILE`
+
+File with the password for the Smallstep CA provisioner specified in `STEP_PROVISIONER`.
+
+#### `STEP_SECRETS`
+
+The path used for Smallstep CA secret files (e.g., private keys and P12 files), defaults to `${STEPPATH}/secrets`.
 
 ### Django Settings
 
