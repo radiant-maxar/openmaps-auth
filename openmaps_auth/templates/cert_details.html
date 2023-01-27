@@ -4,8 +4,9 @@
 {% block center %}
 <div class="center_section">
   <p>
-    <a class="login_button" href="{% url 'cert_download' cert.pk %}">Download Certificate</a>
-    <a class="login_button" href="{% url 'cert_delete' cert.pk %}">Delete Certificate</a>
+    <a class="login_button" href="{% url 'cert_legacy' cert.pk %}">Download Legacy</a>
+    <a class="login_button" href="{% url 'cert_modern' cert.pk %}">Download Modern</a>
+    <a class="login_button" href="{% url 'cert_delete' cert.pk %}">Delete</a>
   </p>
   <p></p>
 </div>
