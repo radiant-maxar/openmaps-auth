@@ -1,6 +1,9 @@
+import string
+
 from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse
+from django.utils.crypto import get_random_string
 from social_core.utils import is_url
 
 
@@ -9,6 +12,10 @@ def get_index_url():
         return settings.INDEX_URL
     else:
         return reverse(settings.INDEX_URL)
+
+
+def random_password(length=48, alphabet=string.ascii_letters + string.digits):
+    return get_random_string(length, alphabet)
 
 
 def set_auth_cookies(request, response):

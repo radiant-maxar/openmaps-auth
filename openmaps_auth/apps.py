@@ -8,5 +8,8 @@ class OpenMapsAuthConfig(AppConfig):
     verbose_name = "OpenMaps Auth"
 
     def ready(self):
+        if settings.OPENMAPS_AUTH_CLIENT_TLS:
+            from .signals import tls  # noqa: F401
+
         if settings.OPENMAPS_AUTH_OSM_SESSION:
             from .signals import osm  # noqa: F401

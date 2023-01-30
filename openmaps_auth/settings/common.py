@@ -14,6 +14,14 @@ if len(BASE_PATH):
 else:
     BASE_URL_PATTERN = ""
 
+# Smallstep CA must be configured for client TLS certificate use.
+STEPPATH = Path(env.str("STEPPATH", default=BASE_DIR / ".step"))
+STEP_CERTS = STEPPATH / "certs"
+STEP_CLI = env.str("STEP_CLI", default="step")
+STEP_PROVISIONER = env.str("STEP_PROVISIONER", default=None)
+STEP_PROVISIONER_PASSWORD_FILE = env.str("STEP_PROVISIONER_PASSWORD_FILE", default=None)
+STEP_SECRETS = STEPPATH / "secrets"
+
 OPENMAPS_AUTH_BACKEND = env.str("OPENMAPS_AUTH_BACKEND", default=None)
 if OPENMAPS_AUTH_BACKEND:
     OPENMAPS_AUTH_SECRET = env.str("OPENMAPS_AUTH_SECRET", default="")
@@ -21,12 +29,27 @@ OPENMAPS_AUTH_TITLE = env.str("OPENMAPS_AUTH_TITLE", default="Maxar OpenMaps")
 OPENMAPS_AUTH_APP_LINKS = env.json(
     "OPENMAPS_AUTH_APP_LINKS", default=[{"link": "/", "text": "MapEdit"}]
 )
-OPENMAPS_AUTH_CLIENT_TLS = env.bool("OPENMAPS_AUTH_CLIENT_TLS", default=False)
+if STEP_PROVISIONER and STEP_PROVISIONER_PASSWORD_FILE:
+    OPENMAPS_AUTH_CLIENT_TLS_DEFAULT = True
+else:
+    OPENMAPS_AUTH_CLIENT_TLS_DEFAULT = False
+OPENMAPS_AUTH_CLIENT_TLS = env.bool(
+    "OPENMAPS_AUTH_CLIENT_TLS", default=OPENMAPS_AUTH_CLIENT_TLS_DEFAULT
+)
 OPENMAPS_AUTH_CLIENT_TLS_CERT_HEADER = env.bool(
     "OPENMAPS_AUTH_CLIENT_TLS_CERT_HEADER", default="X-TLS-Client-Cert"
 )
 OPENMAPS_AUTH_CLIENT_TLS_VERIFY_HEADER = env.bool(
     "OPENMAPS_AUTH_CLIENT_TLS_VERIFY_HEADER", default="X-TLS-Client-Verify"
+)
+OPENMAPS_AUTH_CLIENT_TLS_DURATION = env.str(
+    "OPENMAPS_AUTH_CLIENT_TLS_DURATION", default="744h"
+)
+OPENMAPS_AUTH_CLIENT_TLS_MAX_CERTS = env.int(
+    "OPENMAPS_AUTH_CLIENT_TLS_MAX_CERTS", default=5
+)
+OPENMAPS_AUTH_CLIENT_TLS_VERIFY_SERIAL = env.bool(
+    "OPENMAPS_AUTH_CLIENT_TLS_VERIFY_SERIAL", default=True
 )
 OPENMAPS_AUTH_OSM_SESSION = env.bool("OPENMAPS_AUTH_OSM_SESSION", default=False)
 
@@ -34,6 +57,7 @@ OSM_BASE_URL = env.str("OSM_BASE_URL", default="https://www.openstreetmap.org")
 OSM_AUTH_URL = env.str("OSM_AUTH_URL", default=OSM_BASE_URL)
 OSM_LOGIN_URL = env.str("OSM_LOGIN_URL", default=f"{OSM_BASE_URL}/login")
 OSM_NEW_USER_URL = env.str("OSM_NEW_USER_URL", default=f"{OSM_BASE_URL}/user/new")
+
 OSM_OAUTH1_ACCESS_TOKEN_URL = env.str(
     "OSM_OAUTH1_ACCESS_TOKEN_URL", default=f"{OSM_AUTH_URL}/oauth/access_token"
 )
@@ -50,12 +74,36 @@ OSM_OAUTH2_AUTHORIZATION_URL = env.str(
     "OSM_OAUTH2_AUTHORIZATION_URL", default=f"{OSM_AUTH_URL}/oauth2/authorize"
 )
 OSM_OAUTH2_DEFAULT_SCOPE = env.list("OSM_OAUTH2_DEFAULT_SCOPE", default=["read_prefs"])
+OSM_USER_ADMINS = env.json("OSM_USER_ADMINS", default=[])
+OSM_USER_ALL_ADMINS = env.bool("OSM_USER_ALL_ADMINS", default=False)
+OSM_USER_COUNTRY = env.str("OSM_USER_COUNTRY", default=None)
 OSM_SESSION_KEY = env.str("OSM_SESSION_KEY", default="_osm_session")
 OSM_USER_DETAILS_URL = env.str(
     "OSM_USER_DETAILS_URL", default=f"{OSM_AUTH_URL}/api/0.6/user/details"
 )
 OSM_USER_EMAIL_DOMAIN = env.str("OSM_USER_EMAIL_DOMAIN", default="openstreetmap.arpa")
-OSM_USER_PASSWORD = env.str("OSM_USER_PASSWORD", default="changemenow")
+OSM_USER_HOME_LAT = env.float("OSM_USER_HOME_LAT", default=None)
+OSM_USER_HOME_LON = env.float("OSM_USER_HOME_LON", default=None)
+OSM_USER_HOME_ZOOM = env.int("OSM_USER_HOME_ZOOM", default=14)
+OSM_USER_LANGUAGES = env.str("OSM_USER_LANGUAGES", default=None)
+OSM_USER_ORGANIZATION = env.str("OSM_USER_ORGANIZATION", default=None)
+
+JOSM_OAUTH1_CALLBACK_URI = env.str(
+    "JOSM_OAUTH1_CALLBACK_URI", default="http://localhost:8111/callback"
+)
+JOSM_OAUTH1_NAME = env.str("JOSM_OAUTH1_NAME", "JOSM - Java OpenStreetMap Editor")
+JOSM_PREFERENCES = env.json(
+    "JOSM_PREFERENCES",
+    default={
+        "tags": {
+            "default.osm.tile.source.url": "https://tile.openstreetmap.org/{zoom}/{x}/{y}.png",
+        }
+    },
+)
+JOSM_PREFERENCES_VERSION = env.str("JOSM_PREFERENCES_VERSION", "18303")
+JOSM_PREFERENCES_XMLNS = env.str(
+    "JOSM_PREFERENCES_XMLNS", "http://josm.openstreetmap.de/preferences-1.0"
+)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 DEBUG = env.bool("DEBUG", default=False)
@@ -76,6 +124,8 @@ INSTALLED_APPS = (
     "social_django",
     "openmaps_auth",
 )
+
+AUTH_USER_MODEL = "openmaps_auth.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -218,11 +268,11 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = INDEX_URL
 
 # When using social or tls login, restrict access based on email or domain
 # whitelists if they are defined.
-OPENMAPS_AUTH_WHITELISTED_DOMAINS = env.list(
+OPENMAPS_AUTH_WHITELISTED_DOMAINS = env.json(
     "OPENMAPS_AUTH_WHITELISTED_DOMAINS", default=[]
 )
 SOCIAL_AUTH_WHITELISTED_DOMAINS = OPENMAPS_AUTH_WHITELISTED_DOMAINS
-OPENMAPS_AUTH_WHITELISTED_EMAILS = env.list(
+OPENMAPS_AUTH_WHITELISTED_EMAILS = env.json(
     "OPENMAPS_AUTH_WHITELISTED_EMAILS", default=[]
 )
 SOCIAL_AUTH_WHITELISTED_EMAILS = OPENMAPS_AUTH_WHITELISTED_EMAILS

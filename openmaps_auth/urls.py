@@ -17,3 +17,14 @@ urlpatterns = [
         include("social_django.urls", namespace="social"),
     ),
 ]
+
+if settings.OPENMAPS_AUTH_CLIENT_TLS:
+    urlpatterns += [
+        path(f"{settings.BASE_URL_PATTERN}certs/", include("openmaps_auth.tls.urls")),
+    ]
+    if settings.OPENMAPS_AUTH_OSM_SESSION:
+        urlpatterns += [
+            path(
+                f"{settings.BASE_URL_PATTERN}josm/", include("openmaps_auth.josm.urls")
+            ),
+        ]

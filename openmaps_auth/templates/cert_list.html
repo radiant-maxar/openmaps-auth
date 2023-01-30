@@ -1,0 +1,30 @@
+{% extends "certs.html" %}
+{% load static %}
+{% block app_heading %}<h1 id="default_title" data-name="YOUR CERTIFICATES">YOUR CERTIFICATES</h1>{% endblock app_heading %}
+{% block center %}
+<div class="center_section">
+  <p>
+    <a class="login_button" href="{% url 'cert_new' %}">Create New Certificate</a>
+  </p>
+  <p></p>
+</div>
+<div class="center_section">
+  <div class="section">
+{% for cert in certificates %}
+    <div class="container_spacing">
+      <article data-name="#{{ forloop.counter }}: {{ cert.pk }}" data-description="Expires at {{ cert.end }}" onmouseover=addtext(this) onmouseout=removetext()>
+        <div class="app_card">
+          <a class="image_holder app_img img_container size" href="{% url 'cert_details' cert.pk %}" target="_blank">
+            <img src="{% static 'img/Certificates.svg' %}" class="show-icon" viewBox="-25 -25 100 100">
+            <use class="material-symbols-outlined" href="#{{ cert.pk }}"></use>
+          </a>
+          <a class="app_img img_container size underline" href="{% url 'cert_details' cert.pk %}" target="_blank">
+            Certificate #{{ forloop.counter }}
+          </a>
+        </div>
+      </article>
+    </div>
+{% endfor %}
+  </div>
+</div>
+{% endblock center %}
