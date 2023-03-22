@@ -1,12 +1,13 @@
 import logging
 import re
 import requests
+
 from django.conf import settings
 from django.contrib.auth.signals import user_logged_in
 from django.core.exceptions import BadRequest, PermissionDenied
 from django.dispatch import receiver
 
-from .. import osm
+from .login import login
 
 
 logger = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ def osm_login(sender, **kwargs):
     """
     request = kwargs.get("request")
     user = kwargs.get("user")
-    ol = osm.login(user)
+    ol = login(user)
     if ol.login_response.headers.get("location").rstrip("/") != settings.OSM_BASE_URL:
         # New user's roles: make administrator when a superuser.
         user_roles = ["moderator"]
@@ -103,7 +104,7 @@ def osm_login(sender, **kwargs):
         )
         if response.status_code == 204:
             logger.info(f"created new osm user: {user}")
-            ol = osm.login(user)
+            ol = login(user)
             if (
                 ol.login_response.headers.get("location").rstrip("/")
                 != settings.OSM_BASE_URL

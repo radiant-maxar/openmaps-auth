@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import FileResponse, HttpResponse
 
-from .. import osm
+from ..osm.oauth import oauth1_application
 
 
 logger = logging.getLogger(__name__)
@@ -73,7 +73,7 @@ def preferences(request):
         or not request.user.josm_oauth1_secret
     ):
         logger.info(f"refreshing josm oauth1 details for {request.user}")
-        josm_oauth1 = osm.oauth1_application(
+        josm_oauth1 = oauth1_application(
             request.user,
             settings.JOSM_OAUTH1_NAME,
             allow_read_gpx=True,
