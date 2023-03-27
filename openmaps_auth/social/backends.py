@@ -65,14 +65,6 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
         }
         return jwt.encode(payload, key=private_key, algorithm=self.JWT_ALGORITHMS[0])
 
-    def get_jwks_keys(self):
-        # Workaround until this fix released:
-        # https://github.com/python-social-auth/social-core/pull/661
-        keys = super().get_jwks_keys()
-        for key in keys:
-            key["alg"] = self.JWT_ALGORITHMS[0]
-        return keys
-
     def get_key_and_secret(self):
         client_id = self.setting("KEY")
         client_secret = self.generate_client_secret()

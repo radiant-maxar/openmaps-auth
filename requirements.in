@@ -7,5 +7,6 @@ hiredis==2.2.2
 python-jose[cryptography]==3.3.0
 redis==4.5.3
 social-auth-app-django==5.1.0
+social-auth-core==4.4.0
 tzdata==2023.2
 whitenoise==6.4.0
