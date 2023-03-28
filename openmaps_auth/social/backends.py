@@ -22,11 +22,8 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
     ACR_VALUES = "http://idmanagement.gov/ns/assurance/ial/1"
     DEFAULT_SCOPE = ["openid", "email"]
     JWT_DECODE_OPTIONS = {"leeway": 30}
+    OIDC_ENDPOINT = "https://secure.login.gov"
     TOKEN_TTL_SEC = 5 * 60  # 5 minutes into the future.
-
-    @property
-    def OIDC_ENDPOINT(self):
-        return self.setting("OIDC_ENDPOINT", "https://secure.login.gov")
 
     def auth_allowed(self, response, details):
         """
