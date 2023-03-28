@@ -22,11 +22,8 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
     ACR_VALUES = "http://idmanagement.gov/ns/assurance/ial/1"
     DEFAULT_SCOPE = ["openid", "email"]
     JWT_DECODE_OPTIONS = {"leeway": 30}
+    OIDC_ENDPOINT = "https://secure.login.gov"
     TOKEN_TTL_SEC = 5 * 60  # 5 minutes into the future.
-
-    @property
-    def OIDC_ENDPOINT(self):
-        return self.setting("OIDC_ENDPOINT", "https://secure.login.gov")
 
     def auth_allowed(self, response, details):
         """
@@ -64,14 +61,6 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
             "exp": now + self.TOKEN_TTL_SEC,
         }
         return jwt.encode(payload, key=private_key, algorithm=self.JWT_ALGORITHMS[0])
-
-    def get_jwks_keys(self):
-        # Workaround until this fix released:
-        # https://github.com/python-social-auth/social-core/pull/661
-        keys = super().get_jwks_keys()
-        for key in keys:
-            key["alg"] = self.JWT_ALGORITHMS[0]
-        return keys
 
     def get_key_and_secret(self):
         client_id = self.setting("KEY")
