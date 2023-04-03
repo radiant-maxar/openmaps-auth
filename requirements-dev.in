@@ -1,2 +1,2 @@
 -r requirements.in
-ipython==8.11.0
+ipython==8.12.0
