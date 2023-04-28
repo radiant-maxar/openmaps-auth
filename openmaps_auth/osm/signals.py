@@ -45,6 +45,10 @@ def osm_login(sender, **kwargs):
         # Set full_name/display_name if user has first/last name.
         if user.first_name and user.last_name:
             full_name = user.get_full_name()
+            if settings.OSM_USER_NAME_REPLACE_SPACE:
+                full_name = full_name.replace(" ", settings.OSM_USER_NAME_REPLACE_SPACE)
+            if settings.OSM_USER_NAME_LOWER:
+                full_name = full_name.lower()
             logger.debug(f"osm user full name: {full_name}")
             new_user_data.update(
                 {
