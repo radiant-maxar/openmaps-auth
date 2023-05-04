@@ -86,6 +86,8 @@ OSM_USER_HOME_LAT = env.float("OSM_USER_HOME_LAT", default=None)
 OSM_USER_HOME_LON = env.float("OSM_USER_HOME_LON", default=None)
 OSM_USER_HOME_ZOOM = env.int("OSM_USER_HOME_ZOOM", default=14)
 OSM_USER_LANGUAGES = env.str("OSM_USER_LANGUAGES", default=None)
+OSM_USER_NAME_LOWER = env.bool("OSM_USER_NAME_LOWER", default=False)
+OSM_USER_NAME_REPLACE_SPACE = env.str("OSM_USER_NAME_REPLACE_SPACE", default=None)
 OSM_USER_ORGANIZATION = env.str("OSM_USER_ORGANIZATION", default=None)
 
 JOSM_OAUTH1_CALLBACK_URI = env.str(

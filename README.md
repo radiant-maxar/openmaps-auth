@@ -260,6 +260,14 @@ The default zoom level to use for created OSM users, defaults to `14`.
 
 The languages to use for all created OSM users instead of inferring from request headers, defaults to `None`.
 
+#### `OSM_USER_NAME_REPLACE_SPACE`
+
+Replace any spaces in the OSM user name with this value.
+
+#### `OSM_USER_NAME_LOWER`
+
+Make the OSM user name lower case.
+
 #### `OSM_USER_ORGANIZATION`
 
 The organization to use for all created OSM users, defaults to `None`.
