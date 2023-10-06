@@ -18,7 +18,11 @@ urlpatterns = [
     ),
 ]
 
-if settings.OPENMAPS_AUTH_CLIENT_TLS:
+if (
+    settings.OPENMAPS_AUTH_CLIENT_TLS
+    and settings.STEP_PROVISIONER
+    and settings.STEP_PROVISIONER_PASSWORD_FILE
+):
     urlpatterns += [
         path(f"{settings.BASE_URL_PATTERN}certs/", include("openmaps_auth.tls.urls")),
     ]
