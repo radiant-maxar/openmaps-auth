@@ -1,4 +1,5 @@
 import logging
+import string
 import urllib.parse
 
 from cryptography import x509
@@ -30,6 +31,13 @@ def cert_from_tls_request(request):
     return cert
 
 
+def clean_x509_name(name):
+    if isinstance(name, x509.OtherName):
+        name = name.value.decode("utf-8")
+    # Filter out any unprintable characters and strip whitespace.
+    return "".join(filter(lambda s: s in string.printable, name)).strip()
+
+
 def email_from_tls_cert(cert):
     email = None
     if cert:
@@ -43,7 +51,9 @@ def email_from_tls_cert(cert):
                     logger.warn(
                         "multiple email subject alternative names encountered, only first is used"
                     )
-                email = cert_emails[0]
+                email = clean_x509_name(cert_emails[0])
+            # TODO: Support getting email from custom x509.OtherName OIDs.
+            # other_names = san_ext.value.get_values_for_type(x509.OtherName)
         else:
             logger.warn("no subject alternative name extension found in certificate")
     return email
