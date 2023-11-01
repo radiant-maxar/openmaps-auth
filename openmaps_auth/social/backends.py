@@ -3,8 +3,8 @@ import time
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.dom import minidom
 
+import jwt
 from django.conf import settings
-from jose import jwt
 from social_core.backends.oauth import BaseOAuth2
 from social_core.backends.okta_openidconnect import (
     OktaOpenIdConnect as BaseOktaOpenIdConnect,
