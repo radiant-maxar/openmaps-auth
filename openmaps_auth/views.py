@@ -42,7 +42,7 @@ def valid(request):
 if settings.OPENMAPS_AUTH_BACKEND:
 
     def callback(request, *args, **kwargs):
-        logger.error('Hereeeeeeeeee request ------>')
+        logger.error("Hereeeeeeeeee request ------>")
         logger.error(request)
         try:
             response = social_django.views.complete(
@@ -52,7 +52,7 @@ if settings.OPENMAPS_AUTH_BACKEND:
                 **kwargs,
             )
         except social_core.exceptions.AuthCanceled as error:
-            logger.error('Hereeeeeeeeee callback ------>')
+            logger.error("Hereeeeeeeeee callback ------>")
             logger.error(error)
             raise BadRequest
         except social_core.exceptions.AuthForbidden as denied:

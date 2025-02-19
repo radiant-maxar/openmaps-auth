@@ -62,7 +62,7 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
             "jti": secrets.token_urlsafe(32),
             "exp": now + self.TOKEN_TTL_SEC,
         }
-        logger.error('Hereeeeeeeeee generate_client_secret ------>')
+        logger.error("Hereeeeeeeeee generate_client_secret ------>")
         logger.error(jwt.encode(payload, key=private_key, algorithm=self.JWT_ALGORITHMS[0]))
         return jwt.encode(payload, key=private_key, algorithm=self.JWT_ALGORITHMS[0])
 
