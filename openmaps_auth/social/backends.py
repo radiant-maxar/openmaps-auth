@@ -15,6 +15,8 @@ from social_core.backends.openstreetmap import (
 )
 from social_core.utils import slugify
 
+logger = logging.getLogger(__name__)
+
 
 class LoginGovOpenIdConnect(OpenIdConnectAuth):
     name = "login-gov"
@@ -60,6 +62,8 @@ class LoginGovOpenIdConnect(OpenIdConnectAuth):
             "jti": secrets.token_urlsafe(32),
             "exp": now + self.TOKEN_TTL_SEC,
         }
+        logger.error('Hereeeeeeeeee generate_client_secret ------>')
+        logger.error(jwt.encode(payload, key=private_key, algorithm=self.JWT_ALGORITHMS[0]))
         return jwt.encode(payload, key=private_key, algorithm=self.JWT_ALGORITHMS[0])
 
     def get_key_and_secret(self):
